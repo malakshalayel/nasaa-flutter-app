@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "327898762107",
+    "project_id": "nasaa-flutter-app-4bf78",
+    "storage_bucket": "nasaa-flutter-app-4bf78.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327898762107:android:5d1ec4dcb5eec6c723cbde",
+        "android_client_info": {
+          "package_name": "com.example.nasaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327898762107-14al31sp761r7voeckb7ngppk288luef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nasaa",
+            "certificate_hash": "965f291b0a431700bc2db61e8fdb21bdb76ab466"
+          }
+        },
+        {
+          "client_id": "327898762107-fdg8ame5lbadd7gge00a9j0iaevu4d4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6FwJtCxpBvinEO9yALALlocdUgGzVeOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327898762107-fdg8ame5lbadd7gge00a9j0iaevu4d4m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "327898762107-c7h542l0dq25u69qgnd2h5e405kp572v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nasaa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

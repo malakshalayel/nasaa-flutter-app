@@ -4,7 +4,7 @@
 #   color: "#000000"
 flutter_native_splash:
   color: "#1C1A1A"
-  image: assets/svg_images/Mask group (5).png
+  background_image : assets/images/Splash (1).png
 
 
 
@@ -13,5 +13,5 @@ flutter_native_splash:
   #! ANDROID 12+ configuration:
   android_12:
     background_image: "assets/images/background_splash.png"
-    image: assets/svg_images/Mask group (5).png
+    image: assets/images/Mask group (6).png
     color: "#000000"

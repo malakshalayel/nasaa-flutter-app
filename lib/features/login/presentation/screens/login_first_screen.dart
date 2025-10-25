@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nasaa/core/router/router_name.dart';
 import 'package:nasaa/features/login/presentation/screens/login.dart';
 
 class LoginFirstScreen extends StatelessWidget {
@@ -44,10 +45,7 @@ class LoginFirstScreen extends StatelessWidget {
                   colorText: Colors.black,
                   backGroundColorButton: Color(0xFFEDE9E3),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
+                    Navigator.pushReplacementNamed(context, RouterName.login);
                   },
                 ),
                 SizedBox(height: 15),

@@ -1,0 +1,26 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "nasaa-flutter-app-4bf78",
+          "appId": "1:327898762107:android:5d1ec4dcb5eec6c723cbde",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "nasaa-flutter-app-4bf78",
+          "configurations": {
+            "android": "1:327898762107:android:5d1ec4dcb5eec6c723cbde",
+            "ios": "1:327898762107:ios:38d0982f892dcade23cbde",
+            "web": "1:327898762107:web:27e30be2885d284123cbde"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "singleProjectMode": true
+  }
+}
