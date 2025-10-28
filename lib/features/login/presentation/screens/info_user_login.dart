@@ -33,86 +33,91 @@ class InfoUserLogin extends StatelessWidget {
         builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Let’s Get to Know You", style: TextStyle(fontSize: 26)),
-                SizedBox(height: 20),
-                Center(
-                  child: DottedBorder(
-                    options: CircularDottedBorderOptions(
-                      padding: const EdgeInsets.all(50),
-                      color: Colors.grey,
-                      strokeWidth: 2,
-                      dashPattern: [10, 5],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Let’s Get to Know You", style: TextStyle(fontSize: 26)),
+                  SizedBox(height: 20),
+                  Center(
+                    child: DottedBorder(
+                      options: CircularDottedBorderOptions(
+                        padding: const EdgeInsets.all(50),
+                        color: Colors.grey,
+                        strokeWidth: 2,
+                        dashPattern: [10, 5],
+                      ),
+                      child: const Column(
+                        children: [
+                          Icon(Icons.add_a_photo_sharp, color: Colors.grey),
+                          SizedBox(height: 8),
+                          Text(
+                            "Profile Photo",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: const Column(
+                  ),
+                  SizedBox(height: 30),
+                  Form(
+                    key: _formKey,
+
+                    child: Column(
                       children: [
-                        Icon(Icons.add_a_photo_sharp, color: Colors.grey),
-                        SizedBox(height: 8),
-                        Text(
-                          "Profile Photo",
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        TextFormFieldUserInfo(
+                          controller: nameController,
+                          validator: (String? p1) {
+                            if (p1!.isEmpty) {
+                              return "Please Enter Your Full Name";
+                            }
+                          },
+                          hintText: "Enter Your Full Name",
+                          data: "Full Name",
+                        ),
+                        TextFormFieldUserInfo(
+                          controller: emailController,
+                          validator: (String? p1) {},
+                          hintText: "Enter Your Email Address",
+                          data: "Email Address (Optinal)",
+                        ),
+                        TextFormFieldUserInfo(
+                          controller: emailController,
+                          validator: (String? p1) {
+                            if (p1!.isEmpty) {
+                              return "Please Enter Your Date Of Birth";
+                            }
+                          },
+                          hintText: "Date Of Birth",
+                          data: "Date Of Birth",
+                          suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.calendar_month_outlined),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                SizedBox(height: 30),
-                Form(
-                  key: _formKey,
-
-                  child: Column(
-                    children: [
-                      TextFormFieldUserInfo(
-                        controller: nameController,
-                        validator: (String? p1) {
-                          if (p1!.isEmpty) {
-                            return "Please Enter Your Full Name";
-                          }
-                        },
-                        hintText: "Enter Your Full Name",
-                        data: "Full Name",
-                      ),
-                      TextFormFieldUserInfo(
-                        controller: emailController,
-                        validator: (String? p1) {},
-                        hintText: "Enter Your Email Address",
-                        data: "Email Address (Optinal)",
-                      ),
-                      TextFormFieldUserInfo(
-                        controller: emailController,
-                        validator: (String? p1) {
-                          if (p1!.isEmpty) {
-                            return "Please Enter Your Date Of Birth";
-                          }
-                        },
-                        hintText: "Date Of Birth",
-                        data: "Date Of Birth",
-                        suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.calendar_month_outlined),
-                        ),
-                      ),
-                    ],
+                  GenderSelector(),
+                  SizedBox(height: 40),
+                  CustomElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await context.read<AuthCubit>().rgisterUser(
+                          user: UserModelSp(
+                            name: nameController.text,
+                            email: emailController.text,
+                          ),
+                        );
+                      }
+                    },
+                    text: "Finish",
                   ),
-                ),
-                GenderSelector(),
-                SizedBox(height: 40),
-                CustomElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await context.read<AuthCubit>().rgisterUser(
-                        user: UserModel(
-                          name: nameController.text,
-                          email: emailController.text,
-                        ),
-                      );
-                    }
-                  },
-                  text: "Finish",
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

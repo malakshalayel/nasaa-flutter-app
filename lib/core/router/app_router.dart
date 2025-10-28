@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasaa/config/cache_helper.dart';
 import 'package:nasaa/core/injection.dart';
 import 'package:nasaa/core/router/router_name.dart';
-import 'package:nasaa/features/login/data/models/repositories/user_repository.dart';
-import 'package:nasaa/features/login/presentation/cubit/auth_cubit.dart';
+import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
+import 'package:nasaa/features/home/presentation/screens/activities_screen.dart';
+import 'package:nasaa/features/home/presentation/screens/home_screen.dart';
+import 'package:nasaa/features/login/data/models/send_otp_request.dart';
+import 'package:nasaa/features/login/data/repositories/user_repository.dart';
 import 'package:nasaa/features/login/presentation/screens/info_user_login.dart';
 import 'package:nasaa/features/login/presentation/screens/login.dart';
 import 'package:nasaa/features/login/presentation/screens/login_first_screen.dart';
 import 'package:nasaa/features/login/presentation/screens/otp_screen.dart';
-import 'package:nasaa/generated/l10n.dart';
+import 'package:nasaa/features/onBoarding/on_boarding_screen.dart';
 
 class AppRouter {
   static Route? onGenerateRoute(RouteSettings settings) {
@@ -17,36 +20,36 @@ class AppRouter {
       case RouterName.loginFirstScreen:
         return MaterialPageRoute(builder: (context) => LoginFirstScreen());
       case RouterName.login:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider<AuthCubit>(
-            create: (_) => AuthCubit(),
-            child: Login(),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => Login());
       case RouterName.otpScreen:
-        final phoneNumber = settings.arguments as String?;
+        final arguments = settings.arguments as SendOtpRequest;
 
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<AuthCubit>(
-            create: (_) => AuthCubit(),
-            child: OtpScreen(phoneNumber: phoneNumber!),
-          ),
+          builder: (_) => OtpScreen(otpRequest: arguments),
         );
 
       case RouterName.infoUserLogin:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider<AuthCubit>(
-            create: (context) => AuthCubit(repo: getIt()),
-            child: InfoUserLogin(),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => InfoUserLogin());
 
       case RouterName.home:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text(CacheHelper.getString(key: nameKey)!)),
+          builder: (_) => BlocProvider<HomeCubit>(
+            create: (context) => HomeCubit(getIt()),
+            child: HomeScreen(),
           ),
         );
+
+      case RouterName.activityScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<HomeCubit>(
+            create: (context) => HomeCubit(getIt()),
+            child: ActivitiesScreen(),
+          ),
+        );
+
+      case RouterName.onBoardingScreen:
+        return MaterialPageRoute(builder: (_) => OnBoardingScreen());
     }
+    return null;
   }
 }

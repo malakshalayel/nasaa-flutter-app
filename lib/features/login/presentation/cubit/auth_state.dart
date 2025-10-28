@@ -7,6 +7,17 @@ class AuthInitialState extends AuthState {}
 
 class AuthLoadingState extends AuthState {}
 
+class AuthError extends AuthState {
+  String message;
+  AuthError(this.message);
+}
+//////// auth state in api ////////////////////
+
+class SendOtpState extends AuthState {}
+
+class VerifyOtpState extends AuthState {}
+
+//////// auth state in firebase /////////////////////////////
 class AuthPhoneCodeSent extends AuthState {
   final String verificationId;
   AuthPhoneCodeSent(this.verificationId);
@@ -17,13 +28,8 @@ class AuthPhoneVerified extends AuthState {
   AuthPhoneVerified({required this.user});
 }
 
-class AuthError extends AuthState {
-  String message;
-  AuthError(this.message);
-}
-
 class AuthUserRegistered extends AuthState {
-  UserModel user;
+  UserModelSp user;
   AuthUserRegistered({required this.user});
 }
 

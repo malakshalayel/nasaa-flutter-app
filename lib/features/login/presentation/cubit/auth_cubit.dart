@@ -1,27 +1,42 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:nasaa/features/login/data/models/repositories/user_repository.dart';
+import 'package:nasaa/config/cache_helper.dart';
+import 'package:nasaa/features/login/data/models/send_otp_request.dart';
+import 'package:nasaa/features/login/data/models/verify_otp_request.dart';
+import 'package:nasaa/features/login/data/models/verify_otp_response.dart';
+import 'package:nasaa/features/login/data/repositories/user_repository.dart';
 import 'package:nasaa/features/login/data/models/user_model.dart';
 import 'package:nasaa/features/login/presentation/cubit/auth_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:nasaa/generated/intl/messages_en.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({this.repo}) : super(AuthInitialState());
+  AuthCubit({required this.repo}) : super(AuthInitialState());
 
-  UserRepository? repo;
+  AuthRepo repo;
+
+  ///// firebase authentaction ///////////////////////////////////////////
   String? _verificationId;
   bool get hasVerificationId => _verificationId != null;
+  String? tocken;
 
-  Future<void> checkIfLoggedIn() async {
+  Future<void> checkIfLoggedInbyFirebase() async {
     User user = FirebaseAuth.instance.currentUser!;
 
     if (FirebaseAuth.instance.currentUser != null) {
       emit(AuthPhoneVerified(user: user));
       emit(AuthSocialVerified(user));
+    }
+  }
+
+  Future<void> checkIfLoggedInbyApi() async {
+    tocken = await CacheHelper.readSecureStorage(key: "token"); // 👈 restore it
+    log("📞 token restored: $tocken");
+
+    if (tocken != null && tocken!.isNotEmpty) {
+      emit(VerifyOtpState());
+    } else {
+      emit(AuthInitialState());
     }
   }
 
@@ -113,10 +128,49 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> rgisterUser({required UserModel user}) async {
+  Future<void> rgisterUser({required UserModelSp user}) async {
     emit(AuthLoadingState());
 
     await repo!.registerUser(user: user);
     emit(AuthUserRegistered(user: user));
+  }
+
+  /////////// Api Authentication //////////////////////////////////////////////////
+
+  Future<void> sentOtpApi(SendOtpRequest otp) async {
+    try {
+      final result = await repo.sendOtp(otp);
+      result.when(
+        onSuccess: (data) {
+          emit(SendOtpState());
+        },
+        onError: (error) {
+          emit(AuthError(error.toString()));
+        },
+      );
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> verifyOtpApi(VerifyOtpRequest otp) async {
+    try {
+      final result = await repo.verifyOtp(otp);
+      result.when(
+        onSuccess: (data) {
+          CacheHelper.writeSecureStorage(
+            key: "token",
+            value: (data).data!.token!,
+          );
+          log("📞 tocken saved  ${tocken}");
+          emit(VerifyOtpState());
+        },
+        onError: (error) {
+          emit(AuthError(error.toString()));
+        },
+      );
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
   }
 }

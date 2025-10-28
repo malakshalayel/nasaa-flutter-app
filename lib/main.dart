@@ -26,22 +26,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        ...PhoneFieldLocalization.delegates,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
-      debugShowCheckedModeBanner: false,
-      initialRoute: RouterName.loginFirstScreen,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      // home: BlocProvider<AuthCubit>(
-      //   create: (context) => AuthCubit(repo: getIt()),
-      //   child: InfoUserLogin(),
-      // ),
+    return BlocProvider(
+      create: (context) => getIt<AuthCubit>(),
+      child: MaterialApp(
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          ...PhoneFieldLocalization.delegates,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        debugShowCheckedModeBanner: false,
+        initialRoute: RouterName.onBoardingScreen,
+        onGenerateRoute: AppRouter.onGenerateRoute,
+        // home: BlocProvider<AuthCubit>(
+        //   create: (context) => AuthCubit(repo: getIt()),
+        //   child: InfoUserLogin(),
+        // ),
+      ),
     );
   }
 }

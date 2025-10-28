@@ -1,26 +1,33 @@
 import 'package:dio/dio.dart';
+import 'package:nasaa/core/networking/api_error_model.dart';
 
-extension DioExtentionExceptioType on DioExceptionType {
-  String get description {
-    switch (this) {
-      case DioExceptionType.cancel:
-        return "Request to API server was cancelled";
-      case DioExceptionType.connectionTimeout:
-        return "Connection timeout with API server";
-      case DioExceptionType.receiveTimeout:
-        return "Receive timeout in connection with API server";
-      case DioExceptionType.sendTimeout:
-        return "Send timeout in connection with API server";
-      case DioExceptionType.badCertificate:
-        return "Bad certificate from API server";
-      case DioExceptionType.badResponse:
-        return "Received invalid status code: ";
-      case DioExceptionType.connectionError:
-        return "Connection to API server failed due to internet connection";
-      case DioExceptionType.unknown:
-        return "Unexpected error occurred";
-      case DioExceptionType.badResponse:
-        return "Bad response from API server";
+extension DioExceptionTypeExtension on DioException {
+  ApiErrorModel when({
+    required ApiErrorModel Function() connectionError,
+    required ApiErrorModel Function() connectionTimeout,
+    required ApiErrorModel Function() sendTimeout,
+    required ApiErrorModel Function() receiveTimeout,
+    required ApiErrorModel Function() badCertificate,
+    required ApiErrorModel Function() badResponse,
+    required ApiErrorModel Function() cancel,
+    required ApiErrorModel Function() unknown,
+  }) {
+    if (type == DioExceptionType.connectionError) {
+      return connectionError();
+    } else if (type == DioExceptionType.connectionTimeout) {
+      return connectionTimeout();
+    } else if (type == DioExceptionType.sendTimeout) {
+      return sendTimeout();
+    } else if (type == DioExceptionType.receiveTimeout) {
+      return receiveTimeout();
+    } else if (type == DioExceptionType.badCertificate) {
+      return badCertificate();
+    } else if (type == DioExceptionType.badResponse) {
+      return badResponse();
+    } else if (type == DioExceptionType.cancel) {
+      return cancel();
+    } else {
+      return unknown();
     }
   }
 }
