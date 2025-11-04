@@ -8,12 +8,16 @@ class TextFormFieldUserInfo extends StatelessWidget {
     this.hintText,
     this.data,
     this.suffixIcon,
+    this.readOnly,
+    this.onTap,
   });
   TextEditingController controller;
   String? Function(String?)? validator;
   String? hintText;
   IconButton? suffixIcon;
   String? data;
+  bool? readOnly;
+  VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +27,8 @@ class TextFormFieldUserInfo extends StatelessWidget {
         Text(data ?? "", style: TextStyle(color: Colors.black, fontSize: 16)),
         SizedBox(height: 8),
         TextFormField(
+          onTap: onTap,
+          readOnly: readOnly ?? false,
           controller: controller,
           validator: validator,
           decoration: InputDecoration(

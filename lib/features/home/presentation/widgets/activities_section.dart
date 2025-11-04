@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nasaa/features/home/data/models/activity_model.dart';
+import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:nasaa/features/home/presentation/widgets/activity_item.dart';
 
 class ActivitiesSection extends StatelessWidget {
@@ -54,7 +56,7 @@ class ActivitiesSection extends StatelessWidget {
             itemCount: activities.length,
             separatorBuilder: (_, __) => const SizedBox(width: 16),
             itemBuilder: (context, index) {
-              return ActivityItem(activity: activities[index]);
+              return ActivityItem(activity: activities[index], onTap: () {});
             },
           ),
         ),

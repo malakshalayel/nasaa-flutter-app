@@ -21,4 +21,13 @@ abstract class HomeServices {
 
   @GET(ApiEndpoints.coachDetails)
   Future<CoachDetailsResponse> getCoachDetails(@Path('id') int id);
+
+  // @GET(ApiEndpoints.coachsIndex)
+  // Future<FeaturedCoachesResponse> getCoachsByIndexActivity(
+  //   @Query("activity_ids[]") List<int> activitiesId,
+  // );
+  @GET(ApiEndpoints.coachsIndex)
+  Future<FeaturedCoachesResponse> getCoachesWithFilters(
+    @Queries() Map<String, dynamic> queries,
+  );
 }

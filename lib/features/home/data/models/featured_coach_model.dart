@@ -3,7 +3,7 @@ class FeaturedCoachModel {
   final int? userId;
   final String? name;
   final ProfileImage? profileImage;
-  final String? rating;
+  final double? rating;
   final List<String>? skills;
   final int? level;
   final String? status;
@@ -23,17 +23,27 @@ class FeaturedCoachModel {
 
   factory FeaturedCoachModel.fromJson(Map<String, dynamic> json) {
     return FeaturedCoachModel(
-      id: json['id'],
-      userId: json['user_id'],
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      userId: json['user_id'] is String
+          ? int.tryParse(json['user_id'])
+          : json['user_id'],
       name: json['name'],
-      profileImage: json['profile_image'] != null
+      profileImage:
+          json['profile_image'] != null &&
+              json['profile_image'] is Map<String, dynamic>
           ? ProfileImage.fromJson(json['profile_image'])
-          : null,
-      rating: json['rating']?.toString(),
+          : null, // ✅ Fix: allow null or string
+      rating: json['rating'] != null
+          ? double.tryParse(json['rating'].toString()) ?? 0.0
+          : 0.0,
       skills: (json['skills'] as List?)?.map((e) => e.toString()).toList(),
-      level: json['level'],
-      status: json['status'],
-      isFavorited: json['is_favorited'] ?? false,
+      level: json['level'] is String
+          ? int.tryParse(json['level'])
+          : json['level'],
+      status: json['status']?.toString(),
+      isFavorited:
+          json['is_favorited'] == true ||
+          json['is_favorited'].toString().toLowerCase() == 'true',
     );
   }
 

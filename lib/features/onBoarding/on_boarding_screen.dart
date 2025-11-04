@@ -247,10 +247,4 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ),
     );
   }
-
-  checkLoginApi() async {
-    await Future.delayed(const Duration(seconds: 3));
-
-    context.read<AuthCubit>().checkIfLoggedInbyApi();
-  }
 }

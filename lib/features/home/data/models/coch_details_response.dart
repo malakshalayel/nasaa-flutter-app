@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class CoachDetailsResponse {
   final CoachDetails? data;
 
@@ -17,14 +19,14 @@ class CoachDetails {
   final int? userId;
   final String? name;
   final UserProfile? userProfile;
-  final String? numberOfReviews;
+  final int? numberOfReviews;
   final String? avgRating;
-  final String? level;
+  final int? level;
   final String? yearsOfExperience;
-  final dynamic activities;
+  final List<Activity>? activities;
   final String? about;
-  final String? isFavorited;
-  final dynamic availableDays;
+  final bool? isFavorited;
+  final List<dynamic>? availableDays;
   final List<TrainingLocation>? trainingLocations;
   final Nationality? nationality;
   final City? city;
@@ -65,14 +67,20 @@ class CoachDetails {
       userProfile: json['user_profile'] != null
           ? UserProfile.fromJson(json['user_profile'])
           : null,
-      numberOfReviews: json['number_of_reviews']?.toString(),
-      avgRating: json['avg_rating']?.toString(),
-      level: json['level']?.toString(),
+      numberOfReviews: json['number_of_reviews'],
+      avgRating: json['avg_rating']?.toString(), // ✅ safe for int or string
+      level: json['level'] is int
+          ? json['level']
+          : int.tryParse(json['level']?.toString() ?? ''),
       yearsOfExperience: json['years_of_experience']?.toString(),
-      activities: json['activities'],
+      activities: (json['activities'] as List?)
+          ?.map((e) => Activity.fromJson(e))
+          .toList(),
       about: json['about'],
-      isFavorited: json['is_favorited']?.toString(),
-      availableDays: json['available_days'],
+      isFavorited:
+          json['is_favorited'] == true ||
+          json['is_favorited'].toString().toLowerCase() == 'true',
+      availableDays: json['available_days'] ?? [],
       trainingLocations: (json['training_locations'] as List?)
           ?.map((e) => TrainingLocation.fromJson(e))
           .toList(),
@@ -105,7 +113,7 @@ class CoachDetails {
     'avg_rating': avgRating,
     'level': level,
     'years_of_experience': yearsOfExperience,
-    'activities': activities,
+    'activities': activities?.map((e) => e.toJson()).toList(),
     'about': about,
     'is_favorited': isFavorited,
     'available_days': availableDays,
@@ -125,7 +133,7 @@ class CoachDetails {
 class UserProfile {
   final String? filename;
   final String? url;
-  final String? attributes;
+  final dynamic attributes; // Can be String or Map
 
   UserProfile({this.filename, this.url, this.attributes});
 
@@ -231,13 +239,18 @@ class City {
   City({this.id, this.name, this.country});
 
   factory City.fromJson(Map<String, dynamic> json) {
-    return City(
-      id: json['id'],
-      name: json['name'],
-      country: json['country'] != null
-          ? Country.fromJson(json['country'])
-          : null,
-    );
+    try {
+      return City(
+        id: json['id'],
+        name: json['name'],
+        country: json['country'] != null
+            ? Country.fromJson(json['country'])
+            : null,
+      );
+    } catch (e) {
+      log('❌ Error parsing City: $e');
+      return City(id: json['id'], name: json['name'], country: null);
+    }
   }
 
   Map<String, dynamic> toJson() => {
@@ -248,13 +261,22 @@ class City {
 }
 
 class Country {
-  final String? id;
+  final String? id; // Keep as String to match schema
   final String? name;
 
   Country({this.id, this.name});
 
   factory Country.fromJson(Map<String, dynamic> json) {
-    return Country(id: json['id'], name: json['name']);
+    try {
+      return Country(
+        // ✅ Handle both int and String for id
+        id: json['id']?.toString(), // Convert to String regardless of type
+        name: json['name'],
+      );
+    } catch (e) {
+      log('❌ Error parsing Country: $e');
+      return Country();
+    }
   }
 
   Map<String, dynamic> toJson() => {'id': id, 'name': name};
@@ -291,16 +313,22 @@ class Language {
 class Certificate {
   final String? filename;
   final String? url;
-  final String? attributes;
+  final dynamic attributes; // ✅ Can be String, Map, or null
 
   Certificate({this.filename, this.url, this.attributes});
 
   factory Certificate.fromJson(Map<String, dynamic> json) {
-    return Certificate(
-      filename: json['filename'],
-      url: json['url'],
-      attributes: json['attributes'],
-    );
+    try {
+      return Certificate(
+        filename: json['filename'],
+        url: json['url'],
+        // Keep as dynamic - can be String or Map
+        attributes: json['attributes'],
+      );
+    } catch (e) {
+      log('❌ Error parsing Certificate: $e');
+      return Certificate();
+    }
   }
 
   Map<String, dynamic> toJson() => {
@@ -313,7 +341,7 @@ class Certificate {
 class IdImage {
   final String? filename;
   final String? url;
-  final String? attributes;
+  final dynamic attributes; // Can be String or Map
 
   IdImage({this.filename, this.url, this.attributes});
 
@@ -342,4 +370,55 @@ class ExtraFeature {
   }
 
   Map<String, dynamic> toJson() => {'extra_feature': extraFeature};
+}
+
+// "activities": [
+//       {
+//         "id": 1,
+//         "name": "Body Building",
+//         "rating_avg": "5.0000",
+//         "icon_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-dumbbell\"><line x1=\"6\" y1=\"6\" x2=\"6\" y2=\"18\"></line><line x1=\"18\" y1=\"6\" x2=\"18\" y2=\"18\"></line><line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"></line></svg>",
+//         "reviews_count": 2,
+//         "years_of_experiance": "10+ years"
+//       }
+//     ],
+
+class Activity {
+  final int? id;
+  final String? name;
+  final String? ratingAvg;
+  final String? iconSvg;
+  final int? reviewsCount;
+  final String? yearsOfExperience;
+
+  Activity({
+    this.id,
+    this.name,
+    this.ratingAvg,
+    this.iconSvg,
+    this.reviewsCount,
+    this.yearsOfExperience,
+  });
+
+  factory Activity.fromJson(Map<String, dynamic> json) {
+    return Activity(
+      id: json['id'],
+      name: json['name']?.toString(),
+      ratingAvg: json['rating_avg']?.toString(),
+      iconSvg: json['icon_svg']?.toString(),
+      reviewsCount: json['reviews_count'] is int
+          ? json['reviews_count']
+          : int.tryParse(json['reviews_count']?.toString() ?? '0'),
+      yearsOfExperience: json['years_of_experiance']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'rating_avg': ratingAvg,
+    'icon_svg': iconSvg,
+    'reviews_count': reviewsCount,
+    'years_of_experiance': yearsOfExperience,
+  };
 }

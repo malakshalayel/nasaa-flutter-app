@@ -67,7 +67,8 @@ class HomeRepo {
     try {
       final response = await _services.getCoachDetails(id);
       final data = response.data;
-      log(data.toString());
+      log('coach details in repo ' + data.toString());
+      log('✅ Coach name parsed: ${data?.name}');
       ApiResult.success(data);
       return data!;
     } catch (e) {
@@ -75,5 +76,64 @@ class HomeRepo {
       ApiResult.error(ApiErrorHandler.handelError(e));
       return CoachDetails();
     }
+  }
+
+  // Future<List<FeaturedCoachModel>> getCoachsByIndexActivity(
+  //   List<int> activityIds,
+  // ) async {
+  //   if (!await checkInternetConnection()) {
+  //     throw Exception("No Internet Connection");
+  //   }
+
+  //   try {
+  //     final response = await _services.getCoachsByIndexActivity(activityIds);
+  //     log('coachs by index response: ' + response.data.toString());
+  //     ApiResult.success(response.data);
+  //     return response.data!;
+  //   } catch (e) {
+  //     log(e.toString());
+  //     ApiResult.error(ApiErrorHandler.handelError(e));
+  //     return [];
+  //   }
+  // }
+
+  Future<List<FeaturedCoachModel>> getCoachesWithFilters(
+    Map<String, dynamic> filterParams,
+  ) async {
+    log('🔍 Fetching coaches with filters: $filterParams');
+
+    // Format arrays properly for API
+    final queries = _formatQueryParams(filterParams);
+
+    // queries = {
+    //   'rating': 4.5,
+    //   'gender': 1,
+    //   'min_price': 50,
+    //   'max_price': 200,
+    //   'extra_features[]': ['family'],
+    //   'activity_ids[]': [1],
+    //   'sort_by': 'rating_desc'
+    // }
+
+    final response = await _services.getCoachesWithFilters(queries);
+
+    return response.data ?? [];
+  }
+
+  Map<String, dynamic> _formatQueryParams(Map<String, dynamic> params) {
+    final formatted = <String, dynamic>{};
+
+    params.forEach((key, value) {
+      if (value == null) return;
+
+      if (value is List && value.isNotEmpty) {
+        // Format arrays as 'key[]' for Retrofit
+        formatted['$key[]'] = value;
+      } else if (value is! List) {
+        formatted[key] = value;
+      }
+    });
+
+    return formatted;
   }
 }

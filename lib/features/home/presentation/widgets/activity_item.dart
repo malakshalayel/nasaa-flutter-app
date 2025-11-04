@@ -18,7 +18,6 @@ class ActivityItem extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: Color(0xFFEDE9E3),
-
               shape: BoxShape.circle,
             ),
             child: Stack(
@@ -27,16 +26,16 @@ class ActivityItem extends StatelessWidget {
                 /// 🟤 Decorative border frame (from Figma)
                 SvgPicture.asset(
                   'assets/svg_images/Clip path group.svg',
-                  width: 85,
-                  height: 80,
+                  width: 60,
+                  height: 60,
                 ),
 
                 /// 🏋️ Icon from API (SVG string)
                 if (activity.icon != null && activity.icon!.isNotEmpty)
                   SvgPicture.string(
                     activity.icon!,
-                    width: 28,
-                    height: 28,
+                    width: 25,
+                    height: 25,
                     colorFilter: const ColorFilter.mode(
                       Color(0xFF4A2E0F),
                       BlendMode.srcIn,
@@ -60,7 +59,7 @@ class ActivityItem extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF4A2E0F),
               ),

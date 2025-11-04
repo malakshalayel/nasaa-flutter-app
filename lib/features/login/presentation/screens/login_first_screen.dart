@@ -13,49 +13,51 @@ class LoginFirstScreen extends StatelessWidget {
         backgroundColor: Colors.black,
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  textAlign: TextAlign.center,
-                  "Welcome to Nasaa!",
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+            padding: const EdgeInsets.all(13.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Welcome to Nasaa!",
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  textAlign: TextAlign.center,
-                  "Your journey starts here, whether you’re a Coach or a user. Choose your role and let’s get started!”",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFFCCCCCC),
+                  SizedBox(height: 15),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Your journey starts here, whether you’re a Coach or a user. Choose your role and let’s get started!”",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFFCCCCCC),
+                    ),
                   ),
-                ),
-                SizedBox(height: 50),
-                SvgPicture.asset("assets/svg_images/login_img.svg"),
-                SizedBox(height: 90),
-                _customElevatedButton(
-                  name: "User",
-                  colorText: Colors.black,
-                  backGroundColorButton: Color(0xFFEDE9E3),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, RouterName.login);
-                  },
-                ),
-                SizedBox(height: 15),
-                _customElevatedButton(
-                  name: "Coach",
-                  colorText: Colors.white,
-                  backGroundColorButton: Color(0xFF433F40),
-                  onPressed: () {},
-                ),
-              ],
+                  SizedBox(height: 50),
+                  SvgPicture.asset("assets/svg_images/login_img.svg"),
+                  SizedBox(height: 90),
+                  _customElevatedButton(
+                    name: "User",
+                    colorText: Colors.black,
+                    backGroundColorButton: Color(0xFFEDE9E3),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, RouterName.login);
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  _customElevatedButton(
+                    name: "Coach",
+                    colorText: Colors.white,
+                    backGroundColorButton: Color(0xFF433F40),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
           ),
         ),

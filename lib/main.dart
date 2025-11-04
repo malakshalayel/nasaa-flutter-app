@@ -38,8 +38,9 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: S.delegate.supportedLocales,
         debugShowCheckedModeBanner: false,
-        initialRoute: RouterName.onBoardingScreen,
-        onGenerateRoute: AppRouter.onGenerateRoute,
+        // initialRoute: RouterName.onBoardingScreen,
+        // onGenerateRoute: AppRouter.onGenerateRoute,
+        home: InfoUserLogin(),
         // home: BlocProvider<AuthCubit>(
         //   create: (context) => AuthCubit(repo: getIt()),
         //   child: InfoUserLogin(),

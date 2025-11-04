@@ -279,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
         id: index,
         name: 'Coach Name Loading',
         status: 'Specialty Loading Text',
-        rating: "4.5",
+        rating: 4.5,
         // Add other required fields with dummy data
       ),
     );

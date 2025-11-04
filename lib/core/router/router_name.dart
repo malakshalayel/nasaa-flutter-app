@@ -9,4 +9,6 @@ class RouterName {
   //home
   static const String home = "home";
   static const String activityScreen = "activityScreen";
+  // static const String coachDetailsScreen = "coachDetailsScreen";
+  static const String coachesByActivityScreen = "coachesByActivityScreen";
 }

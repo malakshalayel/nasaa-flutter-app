@@ -5,6 +5,8 @@ import 'package:nasaa/core/injection.dart';
 import 'package:nasaa/core/router/router_name.dart';
 import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:nasaa/features/home/presentation/screens/activities_screen.dart';
+import 'package:nasaa/features/home/presentation/screens/coach_detailes_screen.dart';
+import 'package:nasaa/features/home/presentation/screens/coaches_by_activity_screen.dart';
 import 'package:nasaa/features/home/presentation/screens/home_screen.dart';
 import 'package:nasaa/features/login/data/models/send_otp_request.dart';
 import 'package:nasaa/features/login/data/repositories/user_repository.dart';
@@ -46,6 +48,20 @@ class AppRouter {
             child: ActivitiesScreen(),
           ),
         );
+
+      case RouterName.coachesByActivityScreen:
+        if (settings.name == RouterName.coachesByActivityScreen) {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<HomeCubit>(
+              create: (context) => HomeCubit(getIt()),
+              child: CoachesByActivityScreen(
+                activityId: args['activityId'],
+                activityName: args['activityName'],
+              ),
+            ),
+          );
+        }
 
       case RouterName.onBoardingScreen:
         return MaterialPageRoute(builder: (_) => OnBoardingScreen());
