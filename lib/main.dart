@@ -4,11 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nasaa/bloc_observer.dart';
 import 'package:nasaa/config/locale_services.dart';
 import 'package:nasaa/config/theme/app_theme.dart';
 import 'package:nasaa/config/theme/theme_services.dart';
 import 'package:nasaa/core/router/app_router.dart';
 import 'package:nasaa/core/router/router_name.dart';
+import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -28,13 +30,21 @@ void main() async {
   await themeServices.loadedTheme();
   final localeServices = LocaleServices();
   await localeServices.loadLocale();
+  Bloc.observer = MyBlocObserver();
   runApp(
-    MultiProvider(
+    MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider<ThemeServices>(create: (_) => themeServices),
-        ChangeNotifierProvider<LocaleServices>(create: (_) => localeServices),
+        BlocProvider(create: (_) => getIt<AuthCubit>()),
+        BlocProvider(create: (_) => getIt<HomeCubit>()),
       ],
-      child: const MyApp(),
+
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ThemeServices>(create: (_) => themeServices),
+          ChangeNotifierProvider<LocaleServices>(create: (_) => localeServices),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -46,30 +56,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeServices = Provider.of<ThemeServices>(context);
     final localeServices = Provider.of<LocaleServices>(context);
-    return BlocProvider(
-      create: (context) => getIt<AuthCubit>(),
-      child: MaterialApp(
-        localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          ...PhoneFieldLocalization.delegates,
-        ],
-        locale: localeServices.locale,
-        supportedLocales: S.delegate.supportedLocales,
-        debugShowCheckedModeBanner: false,
-        initialRoute: RouterName.onBoardingScreen,
-        onGenerateRoute: AppRouter.onGenerateRoute,
-        darkTheme: AppTheme.dark(),
-        theme: AppTheme.light(),
-        themeMode: themeServices.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-        //home: InfoUserLogin(),
-        // home: BlocProvider<AuthCubit>(
-        //   create: (context) => AuthCubit(repo: getIt()),
-        //   child: InfoUserLogin(),
-        // ),
-      ),
+    return MaterialApp(
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        ...PhoneFieldLocalization.delegates,
+      ],
+      locale: localeServices.locale,
+      supportedLocales: S.delegate.supportedLocales,
+      debugShowCheckedModeBanner: false,
+      initialRoute: RouterName.appStartDecider,
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(),
+      themeMode: themeServices.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      //home: InfoUserLogin(),
+      // home: BlocProvider<AuthCubit>(
+      //   create: (context) => AuthCubit(repo: getIt()),
+      //   child: InfoUserLogin(),
+      // ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasaa/features/home/data/models/coch_details_response.dart';
 import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +15,10 @@ class CoachDetailsScreen extends StatefulWidget {
 }
 
 class _CoachDetailsScreenState extends State<CoachDetailsScreen> {
-  bool isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
+
     print(widget.coachDetails.idImage?.url);
     log('CoachDetailsScreen build with coach: ${widget.coachDetails.name}');
     return Scaffold(
@@ -36,19 +37,24 @@ class _CoachDetailsScreenState extends State<CoachDetailsScreen> {
                 icon: const Icon(Icons.share_outlined, color: Colors.black),
                 onPressed: () {},
               ),
-              IconButton(
-                icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite ? Colors.red : Colors.black,
-                ),
-                onPressed: () async {
-                  setState(() {
-                    isFavorite = !isFavorite;
-                  });
-                  log("addddddddd");
-                  // await context.read<HomeCubit>().addOrRemoveFromFavorite(
-                  // //  widget.coachDetails,
-                  // );
+              BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  final isFav = homeCubit.favoriteCoachesId.contains(
+                    widget.coachDetails.id,
+                  );
+
+                  return IconButton(
+                    icon: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: isFav ? Colors.red : Colors.black,
+                    ),
+                    onPressed: () async {
+                      log("addddddddd");
+                      await homeCubit.addOrRemoveFromFavorite(
+                        widget.coachDetails.id!,
+                      );
+                    },
+                  );
                 },
               ),
             ],

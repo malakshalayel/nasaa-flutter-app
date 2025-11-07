@@ -3,6 +3,7 @@ import 'package:nasaa/core/networking/api_endpoints.dart';
 import 'package:nasaa/features/home/data/models/activity_model.dart';
 import 'package:nasaa/features/home/data/models/activity_response.dart';
 import 'package:nasaa/features/home/data/models/coch_details_response.dart';
+import 'package:nasaa/features/home/data/models/favorite_model_response.dart';
 import 'package:nasaa/features/home/data/models/featured_coach_model.dart';
 import 'package:nasaa/features/home/data/models/featured_coachs_response.dart';
 import 'package:retrofit/error_logger.dart';
@@ -30,4 +31,10 @@ abstract class HomeServices {
   Future<FeaturedCoachesResponse> getCoachesWithFilters(
     @Queries() Map<String, dynamic> queries,
   );
+
+  @POST(ApiEndpoints.favorite)
+  Future<dynamic> setFavoriteCoaches(@Body() Map<String, dynamic> body);
+
+  @DELETE(ApiEndpoints.favorite + "/{favoriteId}")
+  Future<dynamic> removeFavoriteCoache(@Path("favoriteId") int favoriteId);
 }

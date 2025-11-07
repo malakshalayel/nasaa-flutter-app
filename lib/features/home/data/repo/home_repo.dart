@@ -118,27 +118,6 @@ class HomeRepo {
     return formatted;
   }
 
-  // Future<List<FeaturedCoachModel>> addOrRemoveFromFavorite(int id) async {
-  //   if (!await checkInternetConnection()) {
-  //     throw Exception("No Internet Connection");
-  //   }
-  //   try {
-  //     List<FeaturedCoachModel> favoriteCoaches = [];
-  //     for (var element in favoriteCoaches) {
-  //       if (id == element.id) {
-  //         favoriteCoaches.remove(id);
-  //       } else {
-  //         favoriteCoaches.add(element);
-  //       }
-  //     }
-  //     return favoriteCoaches;
-  //   } catch (e) {
-  //     log(e.toString());
-  //     ApiResult.error(ApiErrorHandler.handelError(e));
-  //     return [];
-  //   }
-  // }
-
   // Store favorites as a class variable
   List<FeaturedCoachModel> _favoriteCoaches = [];
 
@@ -174,5 +153,40 @@ class HomeRepo {
   // Get all favorites
   List<FeaturedCoachModel> getFavoriteCoaches() {
     return List.from(_favoriteCoaches);
+  }
+
+  Future<bool> setFavoriteCoaches(int coachId) async {
+    if (!await checkInternetConnection()) {
+      throw Exception("No Internet Connection");
+    }
+
+    try {
+      final response = await _services.setFavoriteCoaches({
+        "coach_id": coachId,
+      });
+
+      // Validate the response (you can check id, message, anything)
+      if (response != null) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("setFavoriteCoaches error: $e");
+      return false;
+    }
+  }
+
+  Future<bool> removeFavoriteCoaches(int coachId) async {
+    if (!await checkInternetConnection()) {
+      throw Exception("No Internet Connection");
+    }
+
+    try {
+      final response = await _services.removeFavoriteCoache(coachId);
+      return true;
+    } catch (e) {
+      print("removeFavoriteCoaches error: $e");
+      return false;
+    }
   }
 }

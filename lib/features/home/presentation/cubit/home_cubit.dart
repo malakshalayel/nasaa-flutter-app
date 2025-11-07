@@ -18,8 +18,10 @@ class HomeCubit extends Cubit<HomeState> {
   List<ActivityModel> activities = [];
   CoachDetails coachDetails = CoachDetails();
   List<FeaturedCoachModel> coachByActivity = [];
+  List<int> favoriteCoachesId = [];
   List<FeaturedCoachModel> favoriteCoaches = [];
   int? selectedCoachId;
+  bool isFavorite = false;
 
   // ✅ Combine both API calls
   Future<void> fetchHomeData() async {
@@ -145,49 +147,53 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  // Future<void> addOrRemoveFromFavorite(int coachId) async {
-  //   if (state is! HomeSuccessState) return;
-  //   try {
-  //     log("here");
-  //     favoriteCoaches = await homeRepo.addOrRemoveFromFavorite(coachId);
-  //     if (state is HomeSuccessState) {
-  //       final currentState = state as HomeSuccessState;
-  //       emit(currentState.copyWith(favoriteCoches: favoriteCoaches));
-  //     }
-
-  //     log("success");
-  //   } catch (e) {
-  //     emit(HomeErrorState(e.toString()));
-  //   }
-  // }
-
-  Future<void> addOrRemoveFromFavorite(FeaturedCoachModel coach) async {
-    if (state is! HomeSuccessState) return;
-
-    try {
-      log("Toggling favorite for coach: ${coach.id}");
-      favoriteCoaches = await homeRepo.addOrRemoveFromFavorite(
-        coach.id!,
-        coach, // Pass the coach object
-      );
-
-      if (state is HomeSuccessState) {
-        final currentState = state as HomeSuccessState;
-        emit(currentState.copyWith(favoriteCoches: favoriteCoaches));
-        log("Favorites updated - Total: ${favoriteCoaches?.length}");
-      }
-    } catch (e) {
-      log("Error: $e");
-      emit(HomeErrorState(e.toString()));
-    }
-  }
-
   // Add this method to fetch favorites
-  void getFavoriteCoaches() {
-    if (state is HomeSuccessState) {
-      final favorites = homeRepo.getFavoriteCoaches();
-      final currentState = state as HomeSuccessState;
-      emit(currentState.copyWith(favoriteCoches: favorites));
+
+  Future<void> addOrRemoveFromFavorite(int coachId) async {
+    try {
+      final bool isFav = favoriteCoachesId.contains(coachId);
+
+      if (!isFav) {
+        final success = await homeRepo.setFavoriteCoaches(coachId);
+
+        if (success) {
+          favoriteCoachesId.add(coachId);
+
+          // ✅ find the full coach model to add it to favorites list
+          final coach = featuredCoachs.firstWhere(
+            (c) => c.id == coachId,
+            orElse: () => FeaturedCoachModel(id: coachId),
+          );
+
+          favoriteCoaches.add(coach);
+        } else {
+          emit(HomeErrorState("Failed to add favorite"));
+          return;
+        }
+      } else {
+        final success = await homeRepo.removeFavoriteCoaches(coachId);
+
+        if (success) {
+          favoriteCoachesId.remove(coachId);
+          favoriteCoaches.removeWhere((c) => c.id == coachId);
+        } else {
+          emit(HomeErrorState("Failed to remove favorite"));
+          return;
+        }
+      }
+
+      // ✅ Emit full coach objects, not IDs
+      emit(
+        HomeSuccessState(
+          coachesByActivity: coachByActivity,
+          coaches: featuredCoachs,
+          activities: activities,
+          coachDetails: coachDetails,
+          favoriteCoches: favoriteCoaches, // ✅ full model list
+        ),
+      );
+    } catch (e) {
+      emit(HomeErrorState(e.toString()));
     }
   }
 }

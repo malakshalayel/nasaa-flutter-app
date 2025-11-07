@@ -13,6 +13,7 @@ class ApiEndpoints {
   static const coachsIndex = 'coach';
   static const coachDetails = 'coach/{id}';
   static const activity = 'activity';
+  static const favorite = 'favorite';
 
   //static const adminLogin = '$baseUrl/auth/admin/login';
 }

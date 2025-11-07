@@ -12,7 +12,7 @@ final class HomeSuccessState extends HomeState {
   final List<ActivityModel> activities;
   final List<FeaturedCoachModel> coachesByActivity;
   final CoachDetails coachDetails;
-  final List<FeaturedCoachModel>? favoriteCoches;
+  final List<FeaturedCoachModel> favoriteCoches;
 
   HomeSuccessState({
     required this.coaches,
@@ -21,6 +21,7 @@ final class HomeSuccessState extends HomeState {
     required this.coachesByActivity,
     required this.favoriteCoches,
   });
+
   HomeSuccessState copyWith({
     List<FeaturedCoachModel>? coaches,
     List<ActivityModel>? activities,

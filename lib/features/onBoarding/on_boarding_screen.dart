@@ -22,13 +22,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _checkAuth();
+    //_checkAuth();
   }
 
-  _checkAuth() async {
-    await Future.delayed(const Duration(seconds: 4));
-    context.read<AuthCubit>().checkIfLoggedInbyApi();
-  }
+  // _checkAuth() async {
+  //   await Future.delayed(const Duration(seconds: 4));
+  //   context.read<AuthCubit>().checkIfLoggedInbyApi();
+  // }
 
   @override
   Widget build(BuildContext context) {

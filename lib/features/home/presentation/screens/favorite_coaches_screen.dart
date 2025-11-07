@@ -62,7 +62,46 @@ class _FavoriteCoachesScreenState extends State<FavoriteCoachesScreen> {
                   child: CoachCard(
                     coach: coaches[index],
                     onTapCoachCard: () async {
-                      // Your existing navigation code
+                      final cubit = context.read<HomeCubit>();
+                      final navigator = Navigator.of(context);
+                      final coach = coaches[index];
+
+                      // Show loading dialog
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (dialogContext) =>
+                            const Center(child: CircularProgressIndicator()),
+                      );
+
+                      try {
+                        await cubit.getCoachesDetails(coach.id!);
+
+                        // Close dialog
+                        if (navigator.canPop()) {
+                          navigator.pop();
+                        }
+
+                        final state = cubit.state;
+                        if (state is HomeSuccessState &&
+                            state.coachDetails != null) {
+                          await navigator.push(
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cubit,
+                                child: CoachDetailsScreen(
+                                  coachDetails: state.coachDetails,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (navigator.canPop()) {
+                          navigator.pop();
+                        }
+                        log('Error: $e');
+                      }
                     },
                   ),
                 );

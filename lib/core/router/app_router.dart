@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nasaa/app_start_decider.dart';
 import 'package:nasaa/config/cache_helper.dart';
 import 'package:nasaa/core/injection.dart';
 import 'package:nasaa/core/router/router_name.dart';
@@ -20,6 +21,8 @@ import 'package:nasaa/features/onBoarding/on_boarding_screen.dart';
 class AppRouter {
   static Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RouterName.appStartDecider:
+        return MaterialPageRoute(builder: (_) => AppStartDecider());
       case RouterName.loginFirstScreen:
         return MaterialPageRoute(builder: (context) => LoginFirstScreen());
       case RouterName.login:
@@ -35,42 +38,24 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => InfoUserLogin());
 
       case RouterName.home:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider<HomeCubit>(
-            create: (context) => HomeCubit(getIt()),
-            child: HomeScreen(),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => HomeScreen());
 
       case RouterName.activityScreen:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider<HomeCubit>(
-            create: (context) => HomeCubit(getIt()),
-            child: ActivitiesScreen(),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => ActivitiesScreen());
 
       case RouterName.coachesByActivityScreen:
         if (settings.name == RouterName.coachesByActivityScreen) {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (_) => BlocProvider<HomeCubit>(
-              create: (context) => HomeCubit(getIt()),
-              child: CoachesByActivityScreen(
-                activityId: args['activityId'],
-                activityName: args['activityName'],
-              ),
+            builder: (_) => CoachesByActivityScreen(
+              activityId: args['activityId'],
+              activityName: args['activityName'],
             ),
           );
         }
 
       case RouterName.favoriteCoachesScreen:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider<HomeCubit>(
-            create: (context) => HomeCubit(getIt()),
-            child: FavoriteCoachesScreen(),
-          ),
-        );
+        return MaterialPageRoute(builder: (_) => FavoriteCoachesScreen());
 
       case RouterName.onBoardingScreen:
         return MaterialPageRoute(builder: (_) => OnBoardingScreen());

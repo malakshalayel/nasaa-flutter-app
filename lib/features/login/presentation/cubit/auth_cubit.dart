@@ -30,14 +30,17 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> checkIfLoggedInbyApi() async {
+  Future<bool> checkIfLoggedInbyApi() async {
     tocken = await CacheHelper.readSecureStorage(key: "token"); // 👈 restore it
     log("📞 token restored: $tocken");
 
     if (tocken != null && tocken!.isNotEmpty) {
-      emit(VerifyOtpState());
+      return true;
+      //emit(VerifyOtpState());
     } else {
-      emit(AuthInitialState());
+      return false;
+
+      //emit(AuthInitialState());
     }
   }
 

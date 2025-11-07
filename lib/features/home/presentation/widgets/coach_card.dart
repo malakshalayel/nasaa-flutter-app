@@ -12,6 +12,7 @@ class CoachCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final skills = coach.skills ?? [];
     final displaySkills = skills.take(3).toList();
+    final theme = Theme.of(context).colorScheme;
 
     return InkWell(
       onTap: onTapCoachCard,
@@ -49,10 +50,10 @@ class CoachCard extends StatelessWidget {
                         coach.name?.isNotEmpty == true
                             ? coach.name!
                             : 'Alexander Montgomery',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          color: theme.onBackground,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -62,10 +63,10 @@ class CoachCard extends StatelessWidget {
                       children: [
                         Text(
                           coach.rating?.toStringAsFixed(1) ?? "4.5",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF4A2E0F),
+                            color: theme.onBackground,
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -129,12 +130,12 @@ class CoachCard extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Starting price
-                const Text(
+                Text(
                   'Starting form: 100 QRA',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: theme.onBackground,
                   ),
                 ),
               ],

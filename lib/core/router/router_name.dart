@@ -1,4 +1,5 @@
 class RouterName {
+  static const String appStartDecider = "/AppStartDecider";
   //auth
   static const String onBoardingScreen = "/onBoardingScreen";
   static const String loginFirstScreen = "/loginFirstScreen";
