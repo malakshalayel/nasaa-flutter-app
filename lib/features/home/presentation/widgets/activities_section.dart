@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nasaa/features/home/data/models/activity_model.dart';
 import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:nasaa/features/home/presentation/widgets/activity_item.dart';
+import 'package:nasaa/generated/l10n.dart';
 
 class ActivitiesSection extends StatelessWidget {
   final List<ActivityModel> activities;
@@ -14,6 +15,7 @@ class ActivitiesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,22 +25,22 @@ class ActivitiesSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Activities',
+              Text(
+                S.of(context).activities,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF4A2E0F), // brownish title
+                  color: scheme.onBackground,
                 ),
               ),
               GestureDetector(
                 onTap: onSeeAll,
-                child: const Text(
-                  'See All >',
+                child: Text(
+                  S.of(context).seeAll,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF8B5E34), // accent brown
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ),
               ),

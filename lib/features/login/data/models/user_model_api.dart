@@ -48,7 +48,11 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      type: json['type'],
+      type: json['type'] is int
+          ? json['type']
+          : (json['type'] != null
+                ? int.tryParse(json['type'].toString())
+                : null),
       phone: json['phone'],
       name: json['name'],
       email: json['email'],

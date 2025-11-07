@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:nasaa/generated/l10n.dart';
 
 class HomeHeaderSection extends StatefulWidget {
   final String userName;
   final List<String> bannerImages;
 
   const HomeHeaderSection({
-    Key? key,
+    super.key,
     required this.userName,
     required this.bannerImages,
-  }) : super(key: key);
+  });
 
   @override
   State<HomeHeaderSection> createState() => _HomeHeaderSectionState();
@@ -20,6 +21,8 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,20 +37,20 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      const TextSpan(
-                        text: 'Keep Striving ',
+                      TextSpan(
+                        text: S.of(context).welcomeMessage,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF4A2E0F),
+                          color: scheme.onBackground,
                         ),
                       ),
                       TextSpan(
                         text: '${widget.userName} 👏',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF4A2E0F),
+                          color: scheme.onBackground,
                         ),
                       ),
                     ],
@@ -111,6 +114,7 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
+                                // ignore: deprecated_member_use
                                 Colors.black.withOpacity(0.5),
                                 Colors.transparent,
                               ],
@@ -195,17 +199,26 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
 
   /// 🟤 Small circular icon button
   Widget _iconButton(IconData icon, {VoidCallback? onTap}) {
+    final scheme = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(100),
       child: Container(
         width: 38,
         height: 38,
-        decoration: const BoxDecoration(
-          color: Color(0xFFF5F1ED),
+        decoration: BoxDecoration(
+          color: scheme.surfaceVariant, // ✅ lighter surface tone for button bg
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(color: scheme.shadow.withOpacity(0.1), blurRadius: 2),
+          ],
         ),
-        child: Icon(icon, size: 20, color: Color(0xFF4A2E0F)),
+        child: Icon(
+          icon,
+          size: 20,
+          color: scheme.onSurface, // ✅ adapts automatically to theme
+        ),
       ),
     );
   }

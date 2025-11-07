@@ -7,6 +7,7 @@ import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:nasaa/features/home/presentation/screens/activities_screen.dart';
 import 'package:nasaa/features/home/presentation/screens/coach_detailes_screen.dart';
 import 'package:nasaa/features/home/presentation/screens/coaches_by_activity_screen.dart';
+import 'package:nasaa/features/home/presentation/screens/favorite_coaches_screen.dart';
 import 'package:nasaa/features/home/presentation/screens/home_screen.dart';
 import 'package:nasaa/features/login/data/models/send_otp_request.dart';
 import 'package:nasaa/features/login/data/repositories/user_repository.dart';
@@ -62,6 +63,14 @@ class AppRouter {
             ),
           );
         }
+
+      case RouterName.favoriteCoachesScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<HomeCubit>(
+            create: (context) => HomeCubit(getIt()),
+            child: FavoriteCoachesScreen(),
+          ),
+        );
 
       case RouterName.onBoardingScreen:
         return MaterialPageRoute(builder: (_) => OnBoardingScreen());

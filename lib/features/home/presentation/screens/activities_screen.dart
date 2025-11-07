@@ -5,6 +5,7 @@ import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:nasaa/features/home/presentation/widgets/activities_section.dart';
 import 'package:nasaa/features/home/presentation/widgets/activity_item.dart';
 import 'package:nasaa/features/home/presentation/widgets/sort_activities_bottom_sheet.dart';
+import 'package:nasaa/generated/l10n.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({super.key});
@@ -25,6 +26,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return BlocListener<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is HomeErrorState) {
@@ -80,12 +82,12 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Activities',
+                        Text(
+                          S.of(context).activities,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 22,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF4A2E0F), // brownish title
+                            color: scheme.onBackground, // brownish title
                           ),
                         ),
                       ],

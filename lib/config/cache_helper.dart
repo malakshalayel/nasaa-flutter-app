@@ -1,24 +1,44 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ✅ Use a class for constants instead of global variables
+class CacheKeys {
+  CacheKeys._(); // Private constructor
+
+  static const String imageKey = 'profile_image';
+  static const String nameKey = 'nameUser';
+  static const String emailKey = 'emailUser';
+  static const String genderKey = 'genderUser';
+  static const String birthKey = 'birthUser';
+  static const String tokenKey = 'token';
+  static const String refreshTokenKey = 'refresh_token';
+  static const String isDarkMode = 'isDarkMode';
+  static const String localKey = 'local';
+}
+
 class CacheHelper {
+  // Private constructor to prevent instantiation
+  CacheHelper._();
+
   static late SharedPreferences _prefs;
-  static FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  Future<void> set({required String key, required dynamic value}) async {
+  // ✅ Make this static too
+  static Future<void> set({required String key, required dynamic value}) async {
     if (value is String) {
-      _prefs.setString(key, value);
+      await _prefs.setString(key, value);
     } else if (value is int) {
-      _prefs.setInt(key, value);
+      await _prefs.setInt(key, value);
     } else if (value is bool) {
-      _prefs.setBool(key, value);
+      await _prefs.setBool(key, value);
     } else if (value is double) {
-      _prefs.setDouble(key, value);
+      await _prefs.setDouble(key, value);
     } else if (value is List<String>) {
-      _prefs.setStringList(key, value);
+      await _prefs.setStringList(key, value);
     }
   }
 
@@ -50,22 +70,23 @@ class CacheHelper {
     await _prefs.clear();
   }
 
+  // Secure Storage methods
   static Future<void> writeSecureStorage({
     required String key,
     required String value,
   }) async {
-    await secureStorage.write(key: key, value: value);
+    await _secureStorage.write(key: key, value: value);
   }
 
   static Future<String?> readSecureStorage({required String key}) async {
-    return await secureStorage.read(key: key);
+    return await _secureStorage.read(key: key);
   }
 
   static Future<void> deleteSecureStorage({required String key}) async {
-    await secureStorage.delete(key: key);
+    await _secureStorage.delete(key: key);
   }
 
-  static Future<void> deleteAllSecureStorge() async {
-    await secureStorage.deleteAll();
+  static Future<void> deleteAllSecureStorage() async {
+    await _secureStorage.deleteAll();
   }
 }

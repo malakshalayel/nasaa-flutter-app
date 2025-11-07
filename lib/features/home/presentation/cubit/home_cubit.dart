@@ -18,35 +18,38 @@ class HomeCubit extends Cubit<HomeState> {
   List<ActivityModel> activities = [];
   CoachDetails coachDetails = CoachDetails();
   List<FeaturedCoachModel> coachByActivity = [];
+  List<FeaturedCoachModel> favoriteCoaches = [];
   int? selectedCoachId;
 
   // ✅ Combine both API calls
-
   Future<void> fetchHomeData() async {
+    if (isClosed) return; // ✅ Prevent emit after close
     emit(HomeLoadingState());
     try {
-      // Fetch both in parallel
       final results = await Future.wait([
         homeRepo.getCoaches(),
         homeRepo.getActivity(),
-        homeRepo.getCoachDetails(1), // Pass a valid coach ID
+        homeRepo.getCoachDetails(1),
       ]);
+
+      if (isClosed) return; // ✅ Check again after async call
 
       featuredCoachs = results[0] as List<FeaturedCoachModel>;
       activities = results[1] as List<ActivityModel>;
       coachDetails = results[2] as CoachDetails;
 
-      // Emit once with both data
       emit(
         HomeSuccessState(
           coaches: featuredCoachs,
           activities: activities,
           coachDetails: coachDetails,
           coachesByActivity: coachByActivity,
+          favoriteCoches: favoriteCoaches,
         ),
       );
-    } catch (e) {
-      emit(HomeErrorState(e.toString()));
+    } catch (e, s) {
+      log('❌ fetchHomeData error: $e\n$s');
+      if (!isClosed) emit(HomeErrorState(e.toString()));
     }
   }
 
@@ -58,6 +61,7 @@ class HomeCubit extends Cubit<HomeState> {
         activities: activities,
         coachDetails: coachDetails,
         coachesByActivity: coachByActivity,
+        favoriteCoches: favoriteCoaches,
       ),
     );
   }
@@ -70,6 +74,7 @@ class HomeCubit extends Cubit<HomeState> {
         activities: activities,
         coachDetails: coachDetails,
         coachesByActivity: coachByActivity,
+        favoriteCoches: favoriteCoaches,
       ),
     );
   }
@@ -82,36 +87,10 @@ class HomeCubit extends Cubit<HomeState> {
         activities: activities,
         coachDetails: coachDetails,
         coachesByActivity: coachByActivity,
+        favoriteCoches: favoriteCoaches,
       ),
     );
   }
-
-  // getCoachesDetails(int id) async {
-  //   selectedCoachId = id;
-  //   emit(HomeLoadingState());
-  //   try {
-  //     coachDetails = await homeRepo.getCoachDetails(id);
-  //     final currentState = state;
-  //     emit(
-  //       HomeSuccessState(
-  //         coachesByActivity: (currentState as HomeSuccessState)
-  //             .coachesByActivity, // ✅ Preserve
-  //         coachDetails: coachDetails, // ✅ Update
-  //         activities: currentState.activities, // ✅ Preserve
-  //         coaches: currentState.coaches, // ✅ Preserve
-  //         // ... add all other fields from currentState
-  //       ),
-  //     );
-  //     // if (state is HomeSuccessState) {
-  //     //   emit((state as HomeSuccessState).copyWith(coachDetails: coachDetails));
-  //     //   log('Fetched coach details in cubit: ${coachDetails.name}');
-  //     // } else {
-  //     //   emit(HomeErrorState("Invalid State"));
-  //     // }
-  //   } catch (e) {
-  //     emit(HomeErrorState(e.toString()));
-  //   }
-  // }
 
   getCoachesDetails(int id) async {
     selectedCoachId = id;
@@ -128,6 +107,7 @@ class HomeCubit extends Cubit<HomeState> {
             coachDetails: coachDetails,
             activities: currentState.activities,
             coaches: currentState.coaches,
+            favoriteCoches: currentState.favoriteCoches,
           ),
         );
       } else {
@@ -138,6 +118,7 @@ class HomeCubit extends Cubit<HomeState> {
             coachDetails: coachDetails,
             activities: [],
             coaches: [],
+            favoriteCoches: [],
           ),
         );
       }
@@ -159,25 +140,54 @@ class HomeCubit extends Cubit<HomeState> {
         coaches: featuredCoachs,
         activities: activities,
         coachDetails: coachDetails,
+        favoriteCoches: favoriteCoaches,
       ),
     );
   }
 
-  // Future<void> getCoachsByIndexActivity(List<int> activitiesId) async {
-  //   emit(HomeLoadingState());
+  // Future<void> addOrRemoveFromFavorite(int coachId) async {
+  //   if (state is! HomeSuccessState) return;
   //   try {
-  //     final response = await homeRepo.getCoachsByIndexActivity(activitiesId);
-  //     coachByActivity = response;
-  //     emit(
-  //       HomeSuccessState(
-  //         coaches: coachByActivity,
-  //         activities: activities,
-  //         coachDetails: coachDetails,
-  //         coachesByActivity: coachByActivity,
-  //       ),
-  //     );
+  //     log("here");
+  //     favoriteCoaches = await homeRepo.addOrRemoveFromFavorite(coachId);
+  //     if (state is HomeSuccessState) {
+  //       final currentState = state as HomeSuccessState;
+  //       emit(currentState.copyWith(favoriteCoches: favoriteCoaches));
+  //     }
+
+  //     log("success");
   //   } catch (e) {
   //     emit(HomeErrorState(e.toString()));
   //   }
   // }
+
+  Future<void> addOrRemoveFromFavorite(FeaturedCoachModel coach) async {
+    if (state is! HomeSuccessState) return;
+
+    try {
+      log("Toggling favorite for coach: ${coach.id}");
+      favoriteCoaches = await homeRepo.addOrRemoveFromFavorite(
+        coach.id!,
+        coach, // Pass the coach object
+      );
+
+      if (state is HomeSuccessState) {
+        final currentState = state as HomeSuccessState;
+        emit(currentState.copyWith(favoriteCoches: favoriteCoaches));
+        log("Favorites updated - Total: ${favoriteCoaches?.length}");
+      }
+    } catch (e) {
+      log("Error: $e");
+      emit(HomeErrorState(e.toString()));
+    }
+  }
+
+  // Add this method to fetch favorites
+  void getFavoriteCoaches() {
+    if (state is HomeSuccessState) {
+      final favorites = homeRepo.getFavoriteCoaches();
+      final currentState = state as HomeSuccessState;
+      emit(currentState.copyWith(favoriteCoches: favorites));
+    }
+  }
 }

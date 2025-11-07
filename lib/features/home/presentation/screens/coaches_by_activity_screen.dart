@@ -6,6 +6,7 @@ import 'package:nasaa/core/constant/app_color.dart';
 import 'package:nasaa/features/home/data/models/featured_coach_model.dart';
 import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
 import 'package:nasaa/features/home/presentation/screens/coach_detailes_screen.dart';
+import 'package:nasaa/features/home/presentation/widgets/coach_card.dart';
 import 'package:nasaa/features/home/presentation/widgets/feature_coach_section.dart';
 import 'package:nasaa/features/home/presentation/widgets/filter_bottom_sheet.dart';
 
@@ -430,32 +431,29 @@ class _CoachesByActivityScreenState extends State<CoachesByActivityScreen> {
                           coach: coach,
                           onTapCoachCard: () async {
                             final cubit = context.read<HomeCubit>();
+                            final navigator = Navigator.of(context);
 
-                            // Store the navigator state BEFORE showing dialog
-                            NavigatorState? navigatorState;
-
+                            // Show loading dialog
                             showDialog(
                               context: context,
                               barrierDismissible: false,
-                              builder: (dialogContext) {
-                                // Capture the navigator from dialog context
-                                navigatorState = Navigator.of(dialogContext);
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
+                              builder: (dialogContext) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                             );
 
                             try {
                               await cubit.getCoachesDetails(coach.id!);
 
-                              // Close dialog using the captured navigator state
-                              navigatorState?.pop();
+                              // Close dialog
+                              if (navigator.canPop()) {
+                                navigator.pop();
+                              }
 
                               final state = cubit.state;
                               if (state is HomeSuccessState &&
                                   state.coachDetails != null) {
-                                await navigatorState?.push(
+                                await navigator.push(
                                   MaterialPageRoute(
                                     builder: (_) => BlocProvider.value(
                                       value: cubit,
@@ -465,15 +463,60 @@ class _CoachesByActivityScreenState extends State<CoachesByActivityScreen> {
                                     ),
                                   ),
                                 );
-                                // if (context.mounted) {
-                                //   _fetchCoaches();
-                                // }
                               }
                             } catch (e) {
-                              navigatorState?.pop();
+                              if (navigator.canPop()) {
+                                navigator.pop();
+                              }
                               log('Error: $e');
                             }
                           },
+                          // onTapCoachCard: () async {
+                          //   final cubit = context.read<HomeCubit>();
+
+                          //   // Store the navigator state BEFORE showing dialog
+                          //   NavigatorState? navigatorState;
+
+                          //   showDialog(
+                          //     context: context,
+                          //     barrierDismissible: false,
+                          //     builder: (dialogContext) {
+                          //       // Capture the navigator from dialog context
+                          //       navigatorState = Navigator.of(dialogContext);
+                          //       return const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       );
+                          //     },
+                          //   );
+
+                          //   try {
+                          //     await cubit.getCoachesDetails(coach.id!);
+
+                          //     // Close dialog using the captured navigator state
+                          //     navigatorState?.pop();
+
+                          //     final state = cubit.state;
+                          //     if (state is HomeSuccessState &&
+                          //         state.coachDetails != null) {
+                          //       await navigatorState?.push(
+                          //         MaterialPageRoute(
+                          //           builder: (_) => BlocProvider.value(
+                          //             value: cubit,
+                          //             child: CoachDetailsScreen(
+                          //               coachDetails: state.coachDetails,
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       );
+                          //       // if (context.mounted) {
+                          //       //   _fetchCoaches();
+                          //       // }
+                          //     }
+                          //   } catch (e) {
+                          //     navigatorState?.pop();
+                          //     log('Error: $e');
+                          //   }
+                          // },
                           // onTapCoachCard: () async {
                           //   NavigatorState? navigatorState;
 

@@ -2,18 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nasaa/core/router/app_router.dart';
-import 'package:nasaa/core/router/router_name.dart';
-import 'package:nasaa/core/shared_widgets.dart/custom_elevated_button.dart';
-import 'package:nasaa/features/login/data/models/send_otp_request.dart';
-import 'package:nasaa/features/login/presentation/cubit/auth_cubit.dart';
-import 'package:nasaa/features/login/presentation/cubit/auth_state.dart';
-import 'package:nasaa/features/login/presentation/screens/otp_screen.dart';
-import 'package:nasaa/features/login/presentation/widgets/divider.dart';
-import 'package:nasaa/features/login/presentation/widgets/phone_field_view.dart';
-import 'package:nasaa/features/login/presentation/widgets/privecy_policy.dart';
-import 'package:nasaa/features/login/presentation/widgets/social_button.dart';
 import 'package:phone_form_field/phone_form_field.dart';
+
+import '../../../../core/router/router_name.dart';
+import '../../../../core/shared_widgets.dart/custom_elevated_button.dart';
+import '../../data/models/send_otp_request.dart';
+import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
+import '../widgets/divider.dart';
+import '../widgets/phone_field_view.dart';
+import '../widgets/privecy_policy.dart';
+import '../widgets/social_button.dart';
+import 'otp_screen.dart';
 
 class Login extends StatefulWidget {
   Login({super.key});

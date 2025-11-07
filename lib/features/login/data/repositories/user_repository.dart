@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:nasaa/config/cache_helper.dart';
 import 'package:nasaa/core/injection.dart';
 import 'package:nasaa/core/networking/api_error_handler.dart';
 import 'package:nasaa/core/networking/api_result.dart';
 import 'package:nasaa/core/networking/dio_factory.dart';
+import 'package:nasaa/core/router/router_name.dart';
 import 'package:nasaa/features/login/data/models/send_otp_request.dart';
 import 'package:nasaa/features/login/data/models/send_otp_response.dart';
 import 'package:nasaa/features/login/data/models/user_model.dart';
@@ -10,11 +12,6 @@ import 'package:nasaa/features/login/data/models/verify_otp_request.dart';
 import 'package:nasaa/features/login/data/models/verify_otp_response.dart';
 import 'package:nasaa/features/login/data/services/auth_services.dart';
 import 'dart:developer';
-
-final String nameKey = "nameUser";
-final String emailKey = "emailUser";
-final String genderKey = "genderUser";
-final String birthKey = "birthUser";
 
 class AuthRepo {
   final AuthServices authServices;
@@ -29,12 +26,11 @@ class AuthRepo {
     return AuthRepo(services);
   }
 
-  final CacheHelper cacheHelper = CacheHelper();
   Future<void> registerUser({required UserModelSp user}) async {
-    await cacheHelper.set(key: nameKey, value: user.name);
-    await cacheHelper.set(key: emailKey, value: user.email);
-    await cacheHelper.set(key: genderKey, value: user.Gender);
-    await cacheHelper.set(key: birthKey, value: user.DateOfBirth);
+    await CacheHelper.set(key: CacheKeys.nameKey, value: user.name);
+    await CacheHelper.set(key: CacheKeys.emailKey, value: user.email);
+    await CacheHelper.set(key: CacheKeys.genderKey, value: user.Gender);
+    await CacheHelper.set(key: CacheKeys.birthKey, value: user.DateOfBirth);
   }
 
   // Future<ApiResult<SendOtpResponse>> sendOtp(SendOtpRequest otp) async {
@@ -77,5 +73,14 @@ class AuthRepo {
       log('Error model created: ${errorModel.message}');
       return ApiResult.error(errorModel);
     }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await CacheHelper.deleteSecureStorage(key: CacheKeys.tokenKey);
+    await CacheHelper.clear();
+
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(RouterName.login, (route) => false);
   }
 }

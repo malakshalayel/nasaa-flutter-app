@@ -119,10 +119,19 @@ class DioFactory {
 
           return handler.next(options);
         },
-        onError: (error, handler) {
+        onError: (error, handler) async {
           if (error.response?.statusCode == 401) {
             log('🔒 UNAUTHORIZED: Token invalid or expired');
             CacheHelper.deleteSecureStorage(key: 'token');
+            final refreshToken = await _refreshToken();
+            if (refreshToken != null) {
+              if (refreshToken.startsWith('Bearer')) {
+                error.requestOptions.headers['Authorization'] = refreshToken;
+              } else {
+                error.requestOptions.headers['Authorization'] =
+                    'Bearer $refreshToken';
+              }
+            }
           }
           if (error.response?.statusCode == 500) {
             log('🔥 SERVER ERROR: Backend issue');
@@ -141,5 +150,16 @@ class DioFactory {
         maxWidth: 90,
       ),
     ]);
+  }
+  Future<String?> _refreshToken() async {
+    final refreshToken = await CacheHelper.readSecureStorage(
+      key: CacheKeys.refreshTokenKey,
+    );
+    final response = await _dio.post(
+      ApiEndpoints.refreshToken,
+      data: {'refresh_token': refreshToken},
+    );
+    final accessToken = response.data['access_token'];
+    return accessToken;
   }
 }

@@ -5,16 +5,17 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-import 'package:nasaa/core/router/router_name.dart';
-import 'package:nasaa/core/shared_widgets.dart/custom_elevated_button.dart';
-import 'package:nasaa/features/login/data/models/user_model.dart';
-import 'package:nasaa/features/login/presentation/cubit/auth_cubit.dart';
-import 'package:nasaa/features/login/presentation/cubit/auth_state.dart';
-import 'package:nasaa/features/login/presentation/widgets/gender.dart';
-import 'package:nasaa/features/login/presentation/widgets/text_form_field.dart';
+import 'package:nasaa/config/cache_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/router/router_name.dart';
+import '../../../../core/shared_widgets.dart/custom_elevated_button.dart';
+import '../../data/models/user_model.dart';
+import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
+import '../widgets/gender.dart';
+import '../widgets/text_form_field.dart';
 
 class InfoUserLogin extends StatefulWidget {
   InfoUserLogin({super.key});
@@ -31,6 +32,9 @@ class _InfoUserLoginState extends State<InfoUserLogin> {
   late final TextEditingController dateOfBirthController;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String selectedGender = 'Male'; // ✅ Store in parent state
+
   File? _profileImage;
   @override
   void initState() {
@@ -62,9 +66,8 @@ class _InfoUserLoginState extends State<InfoUserLogin> {
     final savedImage = await imageFile.copy('${appDir.path}/$fileName');
 
     log('Image saved at: ${savedImage.path}');
-    String imageKey = 'profile_image';
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(imageKey, savedImage.path);
+    await prefs.setString(CacheKeys.imageKey, savedImage.path);
 
     setState(() {
       _profileImage = savedImage;
@@ -96,7 +99,11 @@ class _InfoUserLoginState extends State<InfoUserLogin> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("✅ User Registered Successfully")),
               );
-              Navigator.pushReplacementNamed(context, RouterName.home);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouterName.home,
+                (route) => false,
+              );
             }
           },
 
@@ -224,7 +231,14 @@ class _InfoUserLoginState extends State<InfoUserLogin> {
                         ],
                       ),
                     ),
-                    GenderSelector(),
+                    GenderSelector(
+                      initialGender: selectedGender,
+                      onGenderChanged: (gender) {
+                        setState(() {
+                          selectedGender = gender; // ✅ Update parent state
+                        });
+                      },
+                    ),
                     SizedBox(height: 40),
                     CustomElevatedButton(
                       onPressed: () async {
@@ -233,6 +247,9 @@ class _InfoUserLoginState extends State<InfoUserLogin> {
                             user: UserModelSp(
                               name: nameController.text,
                               email: emailController.text,
+                              DateOfBirth: dateOfBirthController.text,
+                              Gender: selectedGender,
+                              profileImage: _profileImage,
                             ),
                           );
                         }

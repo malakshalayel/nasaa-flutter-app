@@ -11,4 +11,5 @@ class RouterName {
   static const String activityScreen = "activityScreen";
   // static const String coachDetailsScreen = "coachDetailsScreen";
   static const String coachesByActivityScreen = "coachesByActivityScreen";
+  static const String favoriteCoachesScreen = "/favoriteCoachesScreen";
 }

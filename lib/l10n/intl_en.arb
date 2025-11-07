@@ -1,1 +1,12 @@
-{}
+{
+    
+  "@@locale": "en",
+  "appTitle": "Nasaa",
+  "welcomeMessage": "Keep Striving ",
+  "activities": "Activities",
+  "featureCoach": "Feature Coach",
+  "seeAll": "See All >",
+  "changeLanguage": "Change Language"
+
+
+}

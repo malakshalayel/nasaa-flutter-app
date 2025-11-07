@@ -15,8 +15,7 @@ injectDependises() {
   // Register Dio
   getIt.registerLazySingleton<Dio>(() => DioFactory().dio);
 
-  // Register CacheHelper
-  getIt.registerLazySingleton<CacheHelper>(() => CacheHelper());
+  // Register CacheHelper`
 
   // Register AuthServices
   getIt.registerLazySingleton<AuthServices>(() => AuthServices(getIt<Dio>()));

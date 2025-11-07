@@ -2,15 +2,24 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:nasaa/features/home/data/models/coch_details_response.dart';
+import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
+import 'package:provider/provider.dart';
 
-class CoachDetailsScreen extends StatelessWidget {
+class CoachDetailsScreen extends StatefulWidget {
   const CoachDetailsScreen({super.key, required this.coachDetails});
   final CoachDetails coachDetails;
 
   @override
+  State<CoachDetailsScreen> createState() => _CoachDetailsScreenState();
+}
+
+class _CoachDetailsScreenState extends State<CoachDetailsScreen> {
+  bool isFavorite = false;
+
+  @override
   Widget build(BuildContext context) {
-    print(coachDetails.idImage?.url);
-    log('CoachDetailsScreen build with coach: ${coachDetails.name}');
+    print(widget.coachDetails.idImage?.url);
+    log('CoachDetailsScreen build with coach: ${widget.coachDetails.name}');
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -28,8 +37,19 @@ class CoachDetailsScreen extends StatelessWidget {
                 onPressed: () {},
               ),
               IconButton(
-                icon: const Icon(Icons.favorite_border, color: Colors.black),
-                onPressed: () {},
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorite ? Colors.red : Colors.black,
+                ),
+                onPressed: () async {
+                  setState(() {
+                    isFavorite = !isFavorite;
+                  });
+                  log("addddddddd");
+                  // await context.read<HomeCubit>().addOrRemoveFromFavorite(
+                  // //  widget.coachDetails,
+                  // );
+                },
               ),
             ],
           ),
@@ -69,7 +89,7 @@ class CoachDetailsScreen extends StatelessWidget {
                   border: Border.all(color: const Color(0xFFB68B59), width: 3),
                   image: DecorationImage(
                     image: NetworkImage(
-                      coachDetails.idImage?.url ??
+                      widget.coachDetails.idImage?.url ??
                           'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
                     ),
                     fit: BoxFit.cover,
@@ -122,7 +142,7 @@ class CoachDetailsScreen extends StatelessWidget {
 
           // Name
           Text(
-            coachDetails.name ?? 'un named',
+            widget.coachDetails.name ?? 'un named',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -135,7 +155,8 @@ class CoachDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildMyActivitiesSection() {
-    return coachDetails.activities == null || coachDetails.activities!.isEmpty
+    return widget.coachDetails.activities == null ||
+            widget.coachDetails.activities!.isEmpty
         ? Container(
             padding: EdgeInsets.all(10),
             child: Text('No activity yet', style: TextStyle(color: Colors.red)),
@@ -159,11 +180,11 @@ class CoachDetailsScreen extends StatelessWidget {
                 height: 100,
 
                 child: ListView.builder(
-                  itemCount: coachDetails.activities?.length ?? 0,
+                  itemCount: widget.coachDetails.activities?.length ?? 0,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    final activity = coachDetails.activities![index];
+                    final activity = widget.coachDetails.activities![index];
                     return Padding(
                       padding: EdgeInsets.only(right: 12),
                       child: _buildActivityCard(
@@ -188,7 +209,7 @@ class CoachDetailsScreen extends StatelessWidget {
     required String subtitle,
     String? rating,
   }) {
-    return coachDetails.activities == null
+    return widget.coachDetails.activities == null
         ? Container()
         : Container(
             width: 300,
@@ -331,10 +352,11 @@ class CoachDetailsScreen extends StatelessWidget {
                 return _buildLocationChip(
                   icon: Icons.wifi,
                   label:
-                      coachDetails.trainingLocations![index].type ?? 'No type',
+                      widget.coachDetails.trainingLocations![index].type ??
+                      'No type',
                 );
               },
-              itemCount: coachDetails.trainingLocations?.length ?? 0,
+              itemCount: widget.coachDetails.trainingLocations?.length ?? 0,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
             ),

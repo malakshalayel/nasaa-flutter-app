@@ -78,25 +78,6 @@ class HomeRepo {
     }
   }
 
-  // Future<List<FeaturedCoachModel>> getCoachsByIndexActivity(
-  //   List<int> activityIds,
-  // ) async {
-  //   if (!await checkInternetConnection()) {
-  //     throw Exception("No Internet Connection");
-  //   }
-
-  //   try {
-  //     final response = await _services.getCoachsByIndexActivity(activityIds);
-  //     log('coachs by index response: ' + response.data.toString());
-  //     ApiResult.success(response.data);
-  //     return response.data!;
-  //   } catch (e) {
-  //     log(e.toString());
-  //     ApiResult.error(ApiErrorHandler.handelError(e));
-  //     return [];
-  //   }
-  // }
-
   Future<List<FeaturedCoachModel>> getCoachesWithFilters(
     Map<String, dynamic> filterParams,
   ) async {
@@ -135,5 +116,63 @@ class HomeRepo {
     });
 
     return formatted;
+  }
+
+  // Future<List<FeaturedCoachModel>> addOrRemoveFromFavorite(int id) async {
+  //   if (!await checkInternetConnection()) {
+  //     throw Exception("No Internet Connection");
+  //   }
+  //   try {
+  //     List<FeaturedCoachModel> favoriteCoaches = [];
+  //     for (var element in favoriteCoaches) {
+  //       if (id == element.id) {
+  //         favoriteCoaches.remove(id);
+  //       } else {
+  //         favoriteCoaches.add(element);
+  //       }
+  //     }
+  //     return favoriteCoaches;
+  //   } catch (e) {
+  //     log(e.toString());
+  //     ApiResult.error(ApiErrorHandler.handelError(e));
+  //     return [];
+  //   }
+  // }
+
+  // Store favorites as a class variable
+  List<FeaturedCoachModel> _favoriteCoaches = [];
+
+  Future<List<FeaturedCoachModel>> addOrRemoveFromFavorite(
+    int id,
+    FeaturedCoachModel coach, // Pass the full coach object
+  ) async {
+    if (!await checkInternetConnection()) {
+      throw Exception("No Internet Connection");
+    }
+
+    try {
+      // Check if coach is already in favorites
+      final index = _favoriteCoaches.indexWhere((c) => c.id == id);
+
+      if (index != -1) {
+        // Coach exists - remove it
+        _favoriteCoaches.removeAt(index);
+        log("Removed coach $id from favorites");
+      } else {
+        // Coach doesn't exist - add it
+        _favoriteCoaches.add(coach);
+        log("Added coach $id to favorites");
+      }
+
+      return List.from(_favoriteCoaches); // Return a copy
+    } catch (e) {
+      log("Error in addOrRemoveFromFavorite: $e");
+      throw e;
+    }
+  }
+
+  // Get all favorites
+  List<FeaturedCoachModel> getFavoriteCoaches() {
+    return List.from(_favoriteCoaches);
   }
 }

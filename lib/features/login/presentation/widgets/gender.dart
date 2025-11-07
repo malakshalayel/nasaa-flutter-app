@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 
 class GenderSelector extends StatefulWidget {
-  const GenderSelector({super.key});
+  GenderSelector({
+    super.key,
+    this.initialGender,
+    required this.onGenderChanged,
+  });
+  final String? initialGender;
+  final Function(String) onGenderChanged;
 
   @override
   State<GenderSelector> createState() => _GenderSelectorState();
 }
 
 class _GenderSelectorState extends State<GenderSelector> {
-  String selectedGender = 'Male'; // default
+  String? _selectedGender; // ✅ Make nullable and private
+
+  // ✅ Use getter instead of late variable
+  String get selectedGender =>
+      _selectedGender ?? widget.initialGender ?? 'Male';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedGender = widget.initialGender ?? 'Male';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +57,8 @@ class _GenderSelectorState extends State<GenderSelector> {
     return Expanded(
       child: OutlinedButton.icon(
         onPressed: () {
-          setState(() => selectedGender = gender);
+          setState(() => _selectedGender = gender);
+          widget.onGenderChanged(gender);
         },
         icon: Icon(
           icon,

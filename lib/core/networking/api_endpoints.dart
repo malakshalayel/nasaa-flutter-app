@@ -6,6 +6,7 @@ class ApiEndpoints {
   //auth
   static const sentOtp = 'auth/otp/send';
   static const verifyOtp = 'auth/otp/verify';
+  static const refreshToken = 'auth/token/refresh';
 
   //home
   static const coachFeatured = "coach_featured";

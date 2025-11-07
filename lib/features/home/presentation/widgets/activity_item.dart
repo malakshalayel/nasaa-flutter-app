@@ -58,10 +58,10 @@ class ActivityItem extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF4A2E0F),
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nasaa/config/cache_helper.dart';
@@ -169,6 +170,15 @@ class AuthCubit extends Cubit<AuthState> {
           emit(AuthError(error.toString()));
         },
       );
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    try {
+      await repo.logout(context);
+      emit(AuthInitialState());
     } catch (e) {
       emit(AuthError(e.toString()));
     }
