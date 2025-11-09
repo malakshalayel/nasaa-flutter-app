@@ -1,10 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:nasaa/config/cache_helper.dart';
 import 'package:nasaa/core/networking/dio_factory.dart';
-import 'package:nasaa/features/home/data/repo/home_repo.dart';
-import 'package:nasaa/features/home/data/services/home_services.dart';
-import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
+import 'package:nasaa/features/activities/data/repo/activity_repo.dart';
+import 'package:nasaa/features/activities/data/services/activity_services.dart';
+import 'package:nasaa/features/activities/presentation/cubit/activity_cubit.dart';
+import 'package:nasaa/features/coaches/data/repo/coach_repo.dart';
+import 'package:nasaa/features/coaches/data/services.dart/coach_services.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/coach_details/cubit/coach_details_cubit.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/cubit_list/coach_list_cubit.dart';
+import 'package:nasaa/features/favorites/data/repo/favorite_repo.dart';
+import 'package:nasaa/features/favorites/data/services/favorites_services.dart';
+import 'package:nasaa/features/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:nasaa/features/login/data/repositories/user_repository.dart';
 import 'package:nasaa/features/login/data/services/auth_services.dart';
 import 'package:nasaa/features/login/presentation/cubit/auth_cubit.dart';
@@ -20,18 +26,44 @@ injectDependises() {
   // Register AuthServices
   getIt.registerLazySingleton<AuthServices>(() => AuthServices(getIt<Dio>()));
 
-  // Register UserRepository
+  // Register UserRepository////////////
   getIt.registerLazySingleton<AuthRepo>(() => AuthRepo(getIt<AuthServices>()));
 
   // Register AuthCubit
-  getIt.registerFactory<AuthCubit>(() => AuthCubit(repo: getIt<AuthRepo>()));
+  getIt.registerLazySingleton<AuthCubit>(
+    () => AuthCubit(repo: getIt<AuthRepo>()),
+  );
 
-  // Register HomeServices
-  getIt.registerLazySingleton<HomeServices>(() => HomeServices(getIt<Dio>()));
+  // register activity services , repo , cubit
+  getIt.registerLazySingleton<ActivityServices>(
+    () => ActivityServices(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<ActivityRepo>(
+    () => ActivityRepo(getIt<ActivityServices>()),
+  );
+  getIt.registerLazySingleton<ActivityCubit>(
+    () => ActivityCubit(getIt<ActivityRepo>()),
+  );
 
-  //Register HomeRepo
-  getIt.registerLazySingleton<HomeRepo>(() => HomeRepo(getIt<HomeServices>()));
+  // register coach services , repo , cubit
+  getIt.registerLazySingleton<CoachServices>(() => CoachServices(getIt<Dio>()));
+  getIt.registerLazySingleton<CoachRepo>(
+    () => CoachRepo(getIt<CoachServices>()),
+  );
+  getIt.registerLazySingleton<CoachCubit>(() => CoachCubit(getIt<CoachRepo>()));
 
-  //  Register HomeCubit
-  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<HomeRepo>()));
+  getIt.registerFactoryParam<CoachDetailsCubit, int, void>(
+    (int id, _) => CoachDetailsCubit(repo: getIt<CoachRepo>(), coachId: id),
+  );
+
+  //register favorite cubit
+  getIt.registerLazySingleton<FavoritesServices>(
+    () => FavoritesServices(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<FavoriteRepo>(
+    () => FavoriteRepo(getIt<FavoritesServices>()),
+  );
+  getIt.registerLazySingleton<FavoriteCubit>(
+    (() => FavoriteCubit(getIt<FavoriteRepo>())),
+  );
 }

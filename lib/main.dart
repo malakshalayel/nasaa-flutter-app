@@ -10,7 +10,10 @@ import 'package:nasaa/config/theme/app_theme.dart';
 import 'package:nasaa/config/theme/theme_services.dart';
 import 'package:nasaa/core/router/app_router.dart';
 import 'package:nasaa/core/router/router_name.dart';
-import 'package:nasaa/features/home/presentation/cubit/home_cubit.dart';
+import 'package:nasaa/features/activities/presentation/cubit/activity_cubit.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/coach_details/cubit/coach_details_cubit.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/cubit_list/coach_list_cubit.dart';
+import 'package:nasaa/features/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +38,9 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<AuthCubit>()),
-        BlocProvider(create: (_) => getIt<HomeCubit>()),
+        BlocProvider(create: (context) => getIt<ActivityCubit>()),
+        BlocProvider(create: (_) => getIt<FavoriteCubit>()),
+        BlocProvider(create: (context) => getIt<CoachCubit>()),
       ],
 
       child: MultiProvider(
