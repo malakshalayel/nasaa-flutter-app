@@ -20,9 +20,11 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-      leading: Icon(icon, color: iconColor ?? Colors.black87, size: 24),
+      leading: Icon(icon, color: iconColor ?? scheme.onBackground, size: 24),
       title: Text(
         title,
         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),

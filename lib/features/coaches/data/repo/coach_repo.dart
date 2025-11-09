@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:nasaa/core/check_internet_connection.dart';
 import 'package:nasaa/core/networking/api_error_handler.dart';
 import 'package:nasaa/core/networking/api_result.dart';
@@ -35,16 +37,17 @@ class CoachRepo {
       throw Exception("No Internet Connection");
     }
     try {
-      return _services
+      return await _services
           .getCoachDetails(id)
           .then((response) {
-            final coachDetails = response.data ?? CoachDetails();
+            final coachDetails = response.data;
             return ApiResult<CoachDetails>.success(
               coachDetails as CoachDetails,
             );
           })
-          .catchError((e) {
-            return ApiResult<CoachDetails>.error(
+          .catchError((e) async {
+            log(e.toString());
+            return await ApiResult<CoachDetails>.error(
               ApiErrorHandler.handelError(e),
             );
           });

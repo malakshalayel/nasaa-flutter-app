@@ -43,7 +43,7 @@ class CoachCubit extends Cubit<CoachState> {
       result.when(
         onSuccess: (data) {
           coaches = data;
-          emit(LoadedCoachState(coaches));
+          emit(LoadedCoachWithFilterState(coaches));
         },
         onError: (errror) => emit(ErrorCoachState(errror.toString())),
       );

@@ -26,7 +26,7 @@ class CoachDetails {
   final List<Activity>? activities;
   final String? about;
   final bool? isFavorited;
-  final List<dynamic>? availableDays;
+  final dynamic availableDays;
   final List<TrainingLocation>? trainingLocations;
   final Nationality? nationality;
   final City? city;
@@ -80,7 +80,7 @@ class CoachDetails {
       isFavorited:
           json['is_favorited'] == true ||
           json['is_favorited'].toString().toLowerCase() == 'true',
-      availableDays: json['available_days'] ?? [],
+      availableDays: json['available_days'] ?? {},
       trainingLocations: (json['training_locations'] as List?)
           ?.map((e) => TrainingLocation.fromJson(e))
           .toList(),

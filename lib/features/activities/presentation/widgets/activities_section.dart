@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nasaa/core/router/router_name.dart';
 import 'package:nasaa/features/activities/data/models/activity_model.dart';
+import 'package:nasaa/features/activities/presentation/cubit/activity_cubit.dart';
+import 'package:nasaa/features/activities/presentation/cubit/activity_state.dart';
 import 'package:nasaa/features/activities/presentation/widgets/activity_item.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/cubit_list/coach_list_cubit.dart';
 import 'package:nasaa/generated/l10n.dart';
 
 class ActivitiesSection extends StatelessWidget {
@@ -55,7 +60,22 @@ class ActivitiesSection extends StatelessWidget {
             itemCount: activities.length,
             separatorBuilder: (_, __) => const SizedBox(width: 16),
             itemBuilder: (context, index) {
-              return ActivityItem(activity: activities[index], onTap: () {});
+              return ActivityItem(
+                activity: activities[index],
+                onTap: () {
+                  context.read<CoachCubit>().getCoachesWithFilters({
+                    'activity_ids[]': [activities[index].id],
+                  });
+                  Navigator.pushNamed(
+                    context,
+                    RouterName.coachesByActivityScreen,
+                    arguments: {
+                      'activityId': activities[index].id,
+                      'activityName': activities[index].name,
+                    },
+                  );
+                },
+              );
             },
           ),
         ),

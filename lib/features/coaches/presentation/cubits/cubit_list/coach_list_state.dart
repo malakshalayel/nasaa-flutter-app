@@ -19,6 +19,13 @@ final class LoadedCoachState extends CoachState {
   const LoadedCoachState(this.coaches);
 }
 
+final class LoadedCoachWithFilterState extends CoachState {
+  final List<FeaturedCoachModel> coachesWithFilters;
+  @override
+  List<Object> get props => [coachesWithFilters];
+  const LoadedCoachWithFilterState(this.coachesWithFilters);
+}
+
 final class ErrorCoachState extends CoachState {
   final String message;
   const ErrorCoachState(this.message);

@@ -86,53 +86,6 @@ class FeaturedCoachSection extends StatelessWidget {
                   print('Error: $e');
                 }
               },
-
-              // onTapCoachCard: () async {
-              //   final cubit = context.read<CoachDetailsCubit>();
-
-              //   // Store the navigator state BEFORE showing dialog
-              //   NavigatorState? navigatorState;
-
-              //   showDialog(
-              //     context: context,
-              //     barrierDismissible: false,
-              //     builder: (dialogContext) {
-              //       // Capture the navigator from dialog context
-              //       navigatorState = Navigator.of(dialogContext);
-              //       return const Center(child: CircularProgressIndicator());
-              //     },
-              //   );
-
-              //   try {
-              //     await cubit.getCoachDetails();
-
-              //     // Close dialog using the captured navigator state
-              //     navigatorState?.pop();
-
-              //     // Navigate
-              //     final state = cubit.state;
-              //     if (state is CoachDetailsLoaded &&
-              //         state.coachDetails != null) {
-              //       // navigatorState?.push(
-              //       //   MaterialPageRoute(
-              //       //     builder: (_) => BlocProvider.value(
-              //       //       value: cubit,
-              //       //       child: CoachDetailsScreen(
-              //       //         coachDetails: state.coachDetails,
-              //       //       ),
-              //       //     ),
-              //       //   ),
-              //       // );
-              //       navigatorState?.pushNamed(
-              //         RouterName.coachDetails,
-              //         arguments: coach.id,
-              //       );
-              //     }
-              //   } catch (e) {
-              //     navigatorState?.pop();
-              //     print('Error: $e');
-              //   }
-              // },
             );
           },
         ),

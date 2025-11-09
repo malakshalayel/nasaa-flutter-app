@@ -168,8 +168,8 @@ class _CoachesByActivityScreenState extends State<CoachesByActivityScreen> {
             );
           }
 
-          if (state is LoadedCoachState) {
-            final allCoaches = state.coaches ?? [];
+          if (state is LoadedCoachWithFilterState) {
+            final allCoaches = state.coachesWithFilters ?? [];
 
             // Apply local search filter
             final coaches = _filterCoachesBySearch(
