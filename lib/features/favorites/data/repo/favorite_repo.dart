@@ -39,8 +39,8 @@ class FavoriteRepo {
       return services
           .getFavoriteCoaches()
           .then((response) {
-            final coaches = response as List<FavoriteCoach>;
-            final ids = coaches.map((e) => int.parse(e.id)).toSet();
+            final coaches = response as List<CoachModel>;
+            final ids = coaches.map((e) => int.parse(e.id.toString())).toSet();
             return ApiResult.success(ids);
           })
           .catchError((e) {

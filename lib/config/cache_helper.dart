@@ -1,9 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ✅ Use a class for constants instead of global variables
 class CacheKeys {
-  CacheKeys._(); // Private constructor
+  CacheKeys._();
 
   static const String imageKey = 'profile_image';
   static const String nameKey = 'nameUser';
@@ -14,6 +13,7 @@ class CacheKeys {
   static const String refreshTokenKey = 'refresh_token';
   static const String isDarkMode = 'isDarkMode';
   static const String localKey = 'local';
+  static const String favoriteKey = 'favorite_coach_ids';
 }
 
 class CacheHelper {
@@ -27,7 +27,6 @@ class CacheHelper {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  // ✅ Make this static too
   static Future<void> set({required String key, required dynamic value}) async {
     if (value is String) {
       await _prefs.setString(key, value);

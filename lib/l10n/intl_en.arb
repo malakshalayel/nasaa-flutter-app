@@ -6,7 +6,17 @@
   "activities": "Activities",
   "featureCoach": "Feature Coach",
   "seeAll": "See All >",
-  "changeLanguage": "Change Language"
+  "changeLanguage": "Change Language",
+  "setting": "Settings",
+  "favorite": "Favorite",
+  "home": "Home",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "language": "Language",
+  "notification": "Notification",
+  "privacy": "Privacy Policy",
+  "aboutUs": "About Us",
+  "logout": "Logout"
 
 
 }

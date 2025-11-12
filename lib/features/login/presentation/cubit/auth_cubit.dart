@@ -30,20 +30,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<bool> checkIfLoggedInbyApi() async {
-    tocken = await CacheHelper.readSecureStorage(key: "token"); // 👈 restore it
-    log("📞 token restored: $tocken");
-
-    if (tocken != null && tocken!.isNotEmpty) {
-      return true;
-      //emit(VerifyOtpState());
-    } else {
-      return false;
-
-      //emit(AuthInitialState());
-    }
-  }
-
   Future<void> sendOtp(String? phoneNumber) async {
     final auth = FirebaseAuth.instance;
 
@@ -135,7 +121,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> rgisterUser({required UserModelSp user}) async {
     emit(AuthLoadingState());
 
-    await repo!.registerUser(user: user);
+    await repo.registerUser(user: user);
     emit(AuthUserRegistered(user: user));
   }
 
@@ -170,11 +156,25 @@ class AuthCubit extends Cubit<AuthState> {
           emit(VerifyOtpState());
         },
         onError: (error) {
-          emit(AuthError(error.toString()));
+          emit(AuthError(error.message));
         },
       );
     } catch (e) {
       emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<bool> checkIfLoggedInbyApi() async {
+    tocken = await CacheHelper.readSecureStorage(key: "token"); // 👈 restore it
+    log("📞 token restored: $tocken");
+
+    if (tocken != null && tocken!.isNotEmpty) {
+      return true;
+      //emit(VerifyOtpState());
+    } else {
+      return false;
+
+      //emit(AuthInitialState());
     }
   }
 

@@ -8,15 +8,13 @@ class ActivityRepo {
 
   ActivityRepo(this._services);
 
-  Future<List<ActivityModel>> getActivities() async {
+  Future<ApiResult<List<ActivityModel>>> getActivities() async {
     try {
       final response = await _services.getActivity();
-      final data = response.data as List<ActivityModel>;
-      ApiResult.success(data);
-      return data!;
+
+      return ApiResult.success(response.data);
     } catch (e) {
-      ApiResult.error(ApiErrorHandler.handelError(e));
-      return [];
+      return ApiResult.error(ApiErrorHandler.handelError(e));
     }
   }
 }

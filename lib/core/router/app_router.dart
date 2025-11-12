@@ -8,10 +8,9 @@ import 'package:nasaa/features/coaches/presentation/cubits/coach_details/cubit/c
 import 'package:nasaa/features/coaches/presentation/screens/coach_detailes_screen.dart';
 import 'package:nasaa/features/coaches/presentation/screens/coaches_by_activity_screen.dart';
 import 'package:nasaa/features/favorites/presentation/screens/favorite_coaches_screen.dart';
-
-import 'package:nasaa/features/home/presentation/screens/home_screen.dart';
+import 'package:nasaa/features/home/presentation/screens/main_navigation.dart';
 import 'package:nasaa/features/login/data/models/send_otp_request.dart';
-import 'package:nasaa/features/login/presentation/screens/info_user_login.dart';
+import 'package:nasaa/features/profile/presentation/screens/info_user_login.dart';
 import 'package:nasaa/features/login/presentation/screens/login.dart';
 import 'package:nasaa/features/login/presentation/screens/login_first_screen.dart';
 import 'package:nasaa/features/login/presentation/screens/otp_screen.dart';
@@ -34,10 +33,19 @@ class AppRouter {
         );
 
       case RouterName.infoUserLogin:
-        return MaterialPageRoute(builder: (_) => InfoUserLogin());
+        return MaterialPageRoute(
+          builder: (_) {
+            final isEditMode = (settings.arguments as bool?) ?? false;
+            return InfoUserLogin(isEditMode: isEditMode);
+          },
+        );
 
+      case RouterName.mainNavigationScreen:
       case RouterName.home:
-        return MaterialPageRoute(builder: (_) => HomeScreen());
+        return MaterialPageRoute(builder: (_) => MainNavigationScreen());
+
+      // case RouterName.home:
+      //   return MaterialPageRoute(builder: (_) => HomeScreen());
 
       case RouterName.activityScreen:
         return MaterialPageRoute(builder: (_) => ActivitiesScreen());

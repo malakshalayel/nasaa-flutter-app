@@ -92,9 +92,9 @@ class _LoginState extends State<Login> {
             } else if (state is VerifyOtpState) {
               Navigator.pushReplacementNamed(context, RouterName.home);
             } else if (state is AuthError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text("//////${state.message}")));
+              // ScaffoldMessenger.of(
+              //   context,
+              // ).showSnackBar(SnackBar(content: Text("//////${state.message}")));
             } else if (state is AuthSocialVerified) {
               Navigator.pushReplacementNamed(context, RouterName.infoUserLogin);
             }

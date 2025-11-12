@@ -21,10 +21,14 @@ class TextFormFieldUserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(data ?? "", style: TextStyle(color: Colors.black, fontSize: 16)),
+        Text(
+          data ?? "",
+          style: TextStyle(color: scheme.onBackground, fontSize: 16),
+        ),
         SizedBox(height: 8),
         TextFormField(
           onTap: onTap,
@@ -34,7 +38,7 @@ class TextFormFieldUserInfo extends StatelessWidget {
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[600]),
+            hintStyle: TextStyle(color: scheme.onBackground.withOpacity(0.5)),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey),

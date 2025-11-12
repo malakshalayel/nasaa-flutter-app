@@ -5,5 +5,15 @@
   "activities": "الأنشطة",
   "featureCoach": "المدربين المميزين",
   "seeAll": "عرض الكل >",
-  "changeLanguage": "تغيير اللغة"
+  "changeLanguage": "تغيير اللغة",
+   "setting": "الاعدادات",
+  "favorite": "المفضلة",
+  "home": "الرئيسية",
+  "lightMode":" الوضع الفاتح",
+  "darkMode": "الوضع الظلام",
+  "language": " اللغة",
+  "notification": "الاشعارات",
+  "privacy": "سياسة الخصوصية",
+  "aboutUs": "من نحن",
+  "logout": "تسجيل الخروج"
 }

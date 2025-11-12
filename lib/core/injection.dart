@@ -7,13 +7,14 @@ import 'package:nasaa/features/activities/presentation/cubit/activity_cubit.dart
 import 'package:nasaa/features/coaches/data/repo/coach_repo.dart';
 import 'package:nasaa/features/coaches/data/services.dart/coach_services.dart';
 import 'package:nasaa/features/coaches/presentation/cubits/coach_details/cubit/coach_details_cubit.dart';
-import 'package:nasaa/features/coaches/presentation/cubits/cubit_list/coach_list_cubit.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/cubit_coach_list/coach_list_cubit.dart';
 import 'package:nasaa/features/favorites/data/repo/favorite_repo.dart';
 import 'package:nasaa/features/favorites/data/services/favorites_services.dart';
 import 'package:nasaa/features/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:nasaa/features/login/data/repositories/user_repository.dart';
 import 'package:nasaa/features/login/data/services/auth_services.dart';
 import 'package:nasaa/features/login/presentation/cubit/auth_cubit.dart';
+import 'package:nasaa/features/profile/presentation/cubit/profile_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -66,4 +67,7 @@ injectDependises() {
   getIt.registerLazySingleton<FavoriteCubit>(
     (() => FavoriteCubit(getIt<FavoriteRepo>())),
   );
+
+  // Register ProfileCubit
+  getIt.registerLazySingleton<ProfileCubit>(() => ProfileCubit());
 }

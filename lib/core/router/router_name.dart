@@ -13,5 +13,6 @@ class RouterName {
   // static const String coachDetailsScreen = "coachDetailsScreen";
   static const String coachesByActivityScreen = "coachesByActivityScreen";
   static const String favoriteCoachesScreen = "/favoriteCoachesScreen";
-  static const String coachDetails = '/coach-details'; // ✅ أضف
+  static const String coachDetails = '/coach-details';
+  static const String mainNavigationScreen = 'mainNavigationScreen';
 }

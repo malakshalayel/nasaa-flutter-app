@@ -11,7 +11,7 @@ class CoachRepo {
   CoachServices _services;
   CoachRepo(this._services);
 
-  Future<ApiResult<List<FeaturedCoachModel>>> getCoaches() async {
+  Future<ApiResult<List<FeaturedCoachModel>>> getFeaturedCoaches() async {
     if (!await checkInternetConnection()) {
       throw Exception("No Internet Connection");
     }

@@ -17,16 +17,23 @@ class CoachDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Coach Details'),
         actions: [
-          // ✅ زر المفضلة
+          // زر المفضلة
           BlocBuilder<FavoriteCubit, FavoriteState>(
             builder: (context, state) {
+              // final isFav = state.isFavorite(coachId);
+              // return IconButton(
+              //   onPressed: () {
+              //     context.read<FavoriteCubit>().toggleFavorite(coachId);
+              //   },
+              //   icon: const Icon(Icons.favorite_border),
+              // );
               if (state is FavoriteLoaded) {
                 final isFav = state.isFavorite(coachId);
 
                 return IconButton(
                   icon: Icon(
                     isFav ? Icons.favorite : Icons.favorite_border,
-                    color: isFav ? Colors.red : null,
+                    color: isFav ? Colors.red : Colors.grey,
                   ),
                   onPressed: () {
                     context.read<FavoriteCubit>().toggleFavorite(coachId);
@@ -62,7 +69,9 @@ class CoachDetailsScreen extends StatelessWidget {
                         radius: 60,
                         backgroundImage: details.userProfile?.url != null
                             ? NetworkImage(details.userProfile!.url!)
-                            : null,
+                            : AssetImage(
+                                "assets/images/coach with image null.jpg",
+                              ),
                         child: details.userProfile?.url == null
                             ? Text(
                                 details.name?[0] ?? 'C',

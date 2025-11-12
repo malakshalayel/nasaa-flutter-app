@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nasaa/config/cache_helper.dart';
+import 'package:nasaa/core/check_internet_connection.dart';
 import 'package:nasaa/core/injection.dart';
 import 'package:nasaa/core/networking/api_error_handler.dart';
 import 'package:nasaa/core/networking/api_result.dart';
@@ -16,15 +17,7 @@ import 'dart:developer';
 class AuthRepo {
   final AuthServices authServices;
 
-  // Constructor injection
   AuthRepo(this.authServices);
-
-  // Factory or initializer if you want to use DioFactory here directly
-  factory AuthRepo.create() {
-    final dio = DioFactory().dio;
-    final services = AuthServices(dio);
-    return AuthRepo(services);
-  }
 
   Future<void> registerUser({required UserModelSp user}) async {
     await CacheHelper.set(key: CacheKeys.nameKey, value: user.name);
@@ -45,14 +38,18 @@ class AuthRepo {
   Future<ApiResult<SendOtpResponse>> sendOtp(SendOtpRequest otp) async {
     try {
       log('Sending OTP request: ${otp.toJson()}');
-      final response = await authServices.sendOtp(otp);
-      log('OTP Response received: ${response.toJson()}');
-      return ApiResult.success(response);
-    } catch (e, stackTrace) {
-      log('OTP Error: $e');
-      log('Error type: ${e.runtimeType}');
-      log('StackTrace: $stackTrace');
 
+      return await authServices
+          .sendOtp(otp)
+          .then(
+            (data) {
+              return ApiResult.success(data);
+            },
+            onError: (error) {
+              return ApiResult.error(ApiErrorHandler.handelError(error));
+            },
+          );
+    } catch (e, stackTrace) {
       final errorModel = ApiErrorHandler.handelError(e);
       log('Error model created: ${errorModel.message}');
 
@@ -61,26 +58,36 @@ class AuthRepo {
   }
 
   Future<ApiResult<VerifyOtpResponse>> verifyOtp(VerifyOtpRequest otp) async {
+    if (!await checkInternetConnection()) {
+      throw Exception("No Internet Connection");
+    }
+
     try {
       final response = await authServices.verifyOtp(otp);
-      log('OTP Response verified: ${response.toJson()}');
+      log(' REPO: OTP verification successful');
+
       return ApiResult.success(response);
     } catch (e, stackTrace) {
-      log('OTP Error: $e');
-      log('Error type: ${e.runtimeType}');
-      log('StackTrace: $stackTrace');
-      final errorModel = ApiErrorHandler.handelError(e);
-      log('Error model created: ${errorModel.message}');
-      return ApiResult.error(errorModel);
+      log(' REPO: OTP verification failed');
+
+      return ApiResult.error(ApiErrorHandler.handelError(e));
     }
   }
 
   Future<void> logout(BuildContext context) async {
-    await CacheHelper.deleteSecureStorage(key: CacheKeys.tokenKey);
-    await CacheHelper.clear();
+    if (!await checkInternetConnection()) {
+      throw Exception("No Internet Connection");
+    }
+    try {
+      await authServices.logout();
+      await CacheHelper.deleteSecureStorage(key: CacheKeys.tokenKey);
+      await CacheHelper.clear();
 
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(RouterName.login, (route) => false);
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil(RouterName.login, (route) => false);
+    } catch (e) {
+      throw Exception("somthing wrong");
+    }
   }
 }

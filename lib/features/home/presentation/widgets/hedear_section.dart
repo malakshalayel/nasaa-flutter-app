@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:nasaa/generated/l10n.dart';
+import 'package:nasaa/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:nasaa/features/profile/presentation/cubit/profile_state.dart';
 
 class HomeHeaderSection extends StatefulWidget {
-  final String userName;
   final List<String> bannerImages;
 
-  const HomeHeaderSection({
-    super.key,
-    required this.userName,
-    required this.bannerImages,
-  });
+  const HomeHeaderSection({super.key, required this.bannerImages});
 
   @override
   State<HomeHeaderSection> createState() => _HomeHeaderSectionState();
@@ -20,47 +18,63 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
   int _currentIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    context.read<ProfileCubit>().loadUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// 👋 Greeting + Icons Row
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Greeting text
               Expanded(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
+                child: BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, state) {
+                    String userName = 'Guest';
+
+                    if (state is ProfileLoaded || state is ProfileUpdated) {
+                      final user = (state is ProfileLoaded)
+                          ? state.user
+                          : (state as ProfileUpdated).user;
+                      userName = user.name.isNotEmpty ? user.name : 'Guest';
+                    }
+
+                    return Text.rich(
                       TextSpan(
-                        text: S.of(context).welcomeMessage,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: scheme.onBackground,
-                        ),
+                        children: [
+                          TextSpan(
+                            text: S.of(context).welcomeMessage,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: scheme.onBackground,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '$userName 👏',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: scheme.onBackground,
+                            ),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: '${widget.userName} 👏',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: scheme.onBackground,
-                        ),
-                      ),
-                    ],
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  },
                 ),
               ),
 
-              // Right icons
               Row(
                 children: [
                   _iconButton(
@@ -84,7 +98,6 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
 
         const SizedBox(height: 8),
 
-        /// 🖼️ Carousel Banner Section
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ClipRRect(
@@ -114,7 +127,6 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                // ignore: deprecated_member_use
                                 Colors.black.withOpacity(0.5),
                                 Colors.transparent,
                               ],
@@ -123,14 +135,14 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
+                        const Padding(
+                          padding: EdgeInsets.all(16),
                           child: Align(
                             alignment: Alignment.bottomLeft,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   "Example Text",
                                   style: TextStyle(
@@ -197,7 +209,6 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
     );
   }
 
-  /// 🟤 Small circular icon button
   Widget _iconButton(IconData icon, {VoidCallback? onTap}) {
     final scheme = Theme.of(context).colorScheme;
 
@@ -208,17 +219,13 @@ class _HomeHeaderSectionState extends State<HomeHeaderSection> {
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: scheme.surfaceVariant, // ✅ lighter surface tone for button bg
+          color: scheme.surfaceVariant,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(color: scheme.shadow.withOpacity(0.1), blurRadius: 2),
           ],
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: scheme.onSurface, // ✅ adapts automatically to theme
-        ),
+        child: Icon(icon, size: 20, color: scheme.onSurface),
       ),
     );
   }

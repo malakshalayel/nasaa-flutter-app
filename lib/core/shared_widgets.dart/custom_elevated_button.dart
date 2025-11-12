@@ -14,18 +14,19 @@ class CustomElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black,
+        backgroundColor: scheme.onBackground,
         padding: EdgeInsets.symmetric(vertical: 15),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(text, style: TextStyle(color: Colors.white, fontSize: 18)),
+          Text(text, style: TextStyle(color: scheme.background, fontSize: 18)),
           SizedBox(width: 5),
-          Icon(icon, color: Colors.white, size: 25),
+          Icon(icon, color: scheme.onBackground, size: 25),
         ],
       ),
     );

@@ -34,17 +34,17 @@ class FeaturedCoachSection extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
-              GestureDetector(
-                onTap: onSeeAll,
-                child: Text(
-                  S.of(context).seeAll,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: onSeeAll,
+              //   child: Text(
+              //     S.of(context).seeAll,
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w500,
+              //       color: Theme.of(context).colorScheme.onSurface,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

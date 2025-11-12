@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nasaa/core/router/router_name.dart';
-import 'package:nasaa/features/login/presentation/screens/login.dart';
 
 class LoginFirstScreen extends StatelessWidget {
   const LoginFirstScreen({super.key});

@@ -11,34 +11,46 @@ class ActivityCubit extends Cubit<ActivityState> {
   Future<void> getActivities() async {
     if (isClosed) return;
     emit(LoadingActivityState());
+
     try {
-      activities = await _repo.getActivities();
-      emit(LoadedActivityState(activities));
+      final result = await _repo.getActivities();
+
+      if (isClosed) return;
+
+      result.when(
+        onSuccess: (data) {
+          activities = data;
+          emit(LoadedActivityState(activities));
+        },
+        onError: (error) {
+          emit(
+            ErrorActivityState(error.message ?? 'Failed to load activities'),
+          );
+        },
+      );
     } catch (e) {
-      if (isClosed) emit(ErrorActivityState(e.toString()));
+      if (!isClosed) {
+        emit(ErrorActivityState(e.toString()));
+      }
     }
   }
 
-  void sortByNewst() {
+  void sortByNewest() {
     if (state is LoadedActivityState) {
-      final sorted = List<ActivityModel>.from(
-        activities..sort(
-          (activity1, activity2) =>
-              (activity2.id ?? 0).compareTo(activity1.id ?? 0),
-        ),
-      );
+      // ✅ Create new list to avoid mutation issues
+      final sorted = List<ActivityModel>.from(activities)
+        ..sort((a, b) => (b.id ?? 0).compareTo(a.id ?? 0));
       activities = sorted;
-      emit(LoadedActivityState(activities));
+      emit(LoadedActivityState(List.from(activities)));
     }
   }
 
   void sortByOldest() {
     if (state is LoadedActivityState) {
-      final sorted = List<ActivityModel>.from(
-        activities..sort((a, b) => (b.id ?? 0).compareTo(a.id ?? 0)),
-      );
+      final sorted = List<ActivityModel>.from(activities)
+        ..sort((a, b) => (a.id ?? 0).compareTo(b.id ?? 0));
       activities = sorted;
-      emit(LoadedActivityState(activities));
+      emit(LoadedActivityState(List.from(activities)));
     }
   }
 
@@ -47,7 +59,7 @@ class ActivityCubit extends Cubit<ActivityState> {
       final sorted = List<ActivityModel>.from(activities)
         ..sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
       activities = sorted;
-      emit(LoadedActivityState(activities));
+      emit(LoadedActivityState(List.from(activities)));
     }
   }
 

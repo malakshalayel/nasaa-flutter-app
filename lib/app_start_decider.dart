@@ -24,7 +24,9 @@ class _AppStartDeciderState extends State<AppStartDecider> {
 
     if (!mounted) return;
     if (loggedIn) {
-      Navigator.of(context).pushReplacementNamed(RouterName.home);
+      Navigator.of(
+        context,
+      ).pushReplacementNamed(RouterName.mainNavigationScreen);
     } else {
       Navigator.of(context).pushReplacementNamed(RouterName.onBoardingScreen);
     }

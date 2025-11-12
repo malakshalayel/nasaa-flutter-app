@@ -1,14 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nasaa/core/constant/app_color.dart';
 import 'package:nasaa/core/router/router_name.dart';
 import 'package:nasaa/features/coaches/data/models/featured_coach_model.dart';
-import 'package:nasaa/features/coaches/presentation/cubits/coach_details/cubit/coach_details_cubit.dart';
-import 'package:nasaa/features/coaches/presentation/cubits/coach_details/cubit/coach_details_state.dart';
-import 'package:nasaa/features/coaches/presentation/cubits/cubit_list/coach_list_cubit.dart';
-import 'package:nasaa/features/coaches/presentation/cubits/cubit_list/coach_list_state.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/cubit_coach_list/coach_list_cubit.dart';
+import 'package:nasaa/features/coaches/presentation/cubits/cubit_coach_list/coach_list_state.dart';
 import 'package:nasaa/features/coaches/presentation/widgets/coach_card.dart';
 import 'package:nasaa/features/coaches/presentation/widgets/filter_bottom_sheet.dart';
 

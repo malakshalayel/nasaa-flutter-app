@@ -11,6 +11,8 @@ class FavoriteInitial extends FavoriteState {
   const FavoriteInitial();
 }
 
+class FavoriteLoading extends FavoriteState {}
+
 class FavoriteLoaded extends FavoriteState {
   final Set<int> favoriteIds;
 

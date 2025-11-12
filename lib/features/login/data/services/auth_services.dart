@@ -22,4 +22,7 @@ abstract class AuthServices {
   Future<VerifyOtpResponse> verifyOtp(
     @Body() VerifyOtpRequest verifyOtpRequest,
   );
+
+  @POST(ApiEndpoints.logout)
+  Future<void> logout();
 }

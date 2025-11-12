@@ -16,7 +16,7 @@ class DioFactory {
       sendTimeout: const Duration(seconds: 30),
       followRedirects: false,
       validateStatus: (status) {
-        return status != null && status < 600;
+        return status != null && status >= 200 && status < 300; // ✅ CORRECT
       },
       headers: const {
         "Content-Type": "application/json",
@@ -47,15 +47,15 @@ class DioFactory {
           if (error.response?.statusCode == 401) {
             log('🔒 UNAUTHORIZED: Token invalid or expired');
             CacheHelper.deleteSecureStorage(key: 'token');
-            final refreshToken = await _refreshToken();
-            if (refreshToken != null) {
-              if (refreshToken.startsWith('Bearer')) {
-                error.requestOptions.headers['Authorization'] = refreshToken;
-              } else {
-                error.requestOptions.headers['Authorization'] =
-                    'Bearer $refreshToken';
-              }
-            }
+            //final refreshToken = await _refreshToken();
+            // if (refreshToken != null) {
+            //   if (refreshToken.startsWith('Bearer')) {
+            //     error.requestOptions.headers['Authorization'] = refreshToken;
+            //   } else {
+            //     error.requestOptions.headers['Authorization'] =
+            //         'Bearer $refreshToken';
+            //   }
+            // }
           }
           if (error.response?.statusCode == 500) {
             log('🔥 SERVER ERROR: Backend issue');
@@ -75,15 +75,15 @@ class DioFactory {
       ),
     ]);
   }
-  Future<String?> _refreshToken() async {
-    final refreshToken = await CacheHelper.readSecureStorage(
-      key: CacheKeys.refreshTokenKey,
-    );
-    final response = await _dio.post(
-      ApiEndpoints.refreshToken,
-      data: {'refresh_token': refreshToken},
-    );
-    final accessToken = response.data['access_token'];
-    return accessToken;
-  }
+  // Future<String?> _refreshToken() async {
+  //   final refreshToken = await CacheHelper.readSecureStorage(
+  //     key: CacheKeys.refreshTokenKey,
+  //   );
+  //   final response = await _dio.post(
+  //     ApiEndpoints.refreshToken,
+  //     data: {'refresh_token': refreshToken},
+  //   );
+  //   final accessToken = response.data['access_token'];
+  //   return accessToken;
+  // }
 }
